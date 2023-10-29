@@ -2,11 +2,13 @@ package com.example.spring.CafeManagerApplication.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@NoArgsConstructor
 public class BillDetailKey implements Serializable {
 
     @Column(name = "bill_id")

@@ -22,6 +22,11 @@ public class BillDetail {
         this.quantity = quantity;
     }
 
+    public BillDetail(Integer billId, Integer productId, Integer quantity) {
+        this.id = new BillDetailKey(billId,productId);
+        this.quantity = quantity;
+    }
+
     @ManyToOne
     @MapsId("billId")
     @JoinColumn(name = "bill_id")
