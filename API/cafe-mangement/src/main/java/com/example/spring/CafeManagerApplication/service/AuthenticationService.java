@@ -1,62 +1,12 @@
 package com.example.spring.CafeManagerApplication.service;
 
-import com.example.spring.CafeManagerApplication.dto.AuthResponseDTO;
 import com.example.spring.CafeManagerApplication.dto.LoginDto;
 import com.example.spring.CafeManagerApplication.dto.RegisterDto;
-import com.example.spring.CafeManagerApplication.entity.Role;
-import com.example.spring.CafeManagerApplication.entity.UserEntity;
-import com.example.spring.CafeManagerApplication.repository.RoleRepository;
-import com.example.spring.CafeManagerApplication.repository.UserRepository;
-import com.example.spring.CafeManagerApplication.security.JwtGenerator;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Collections;
+public interface AuthenticationService {
 
-@Service
-public class AuthenticationService {
-    private final UserRepository userRepository;
-    private final JwtGenerator jwtGenerator;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+    ResponseEntity<?> register(RegisterDto registerDto);
+    ResponseEntity<?> login(LoginDto LoginDto);
 
-    public AuthenticationService(UserRepository userRepository, JwtGenerator jwtGenerator, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.jwtGenerator = jwtGenerator;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-    }
-
-    public AuthResponseDTO register(RegisterDto registerDto) {
-        UserEntity user = new UserEntity();
-        user.setUsername(registerDto.getUsername());
-        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
-
-        Role roles = roleRepository.findByName("employee").get();
-        user.setRoles(Collections.singletonList(roles));
-
-        UserEntity savedUser = userRepository.save(user);
-        var token = jwtGenerator.generateToken(user);
-        return new AuthResponseDTO(token, user.getUsername());
-    }
-
-    public AuthResponseDTO login(LoginDto loginDto) {
-
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
-                        loginDto.getPassword()
-                )
-        );
-
-        var user = userRepository.findByUsername(loginDto.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
-        var token = jwtGenerator.generateToken(user);
-        return new AuthResponseDTO(token, user.getUsername());
-    }
 }
