@@ -1,5 +1,6 @@
 package com.example.spring.CafeManagerApplication.security;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +19,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private JwtGenerator tokenGenerator;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    Claims claims = null;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,6 +44,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request,response);
     }
+
+//    public boolean isAdmin(){
+//        return "1".equalsIgnoreCase((String) claims.get("role_id"));
+//    }
 
 //    private String getJWTFromRequest(HttpServletRequest request) {
 //        String bearerToken = request.getHeader("Authorization");

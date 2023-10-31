@@ -41,7 +41,6 @@ public class BillServiceImpl implements BillService {
         Bill savedBill = billRepository.saveAndFlush(bill);
 
         for(ProductIdDto productIdDto : billRequestDto.getProducts()){
-            System.out.println("CHECKKKKKKK");
             BillDetailKey billDetailKey = new BillDetailKey(savedBill.getId(),productIdDto.getProductId());
             Product product = productRepository.findById(productIdDto.getProductId())
                     .orElseThrow();
