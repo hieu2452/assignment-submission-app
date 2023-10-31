@@ -1,8 +1,8 @@
 package com.example.spring.CafeManagerApplication.service;
 
-import com.example.spring.CafeManagerApplication.dto.BillRequestDto;
+import com.example.spring.CafeManagerApplication.dto.BillDetailDto;
 import org.springframework.http.ResponseEntity;
 
 public interface BillService {
-    ResponseEntity<?> addNewBill(BillRequestDto billRequestDto);
+    ResponseEntity<?> addNewBill(BillDetailDto billDetailDto);
 }

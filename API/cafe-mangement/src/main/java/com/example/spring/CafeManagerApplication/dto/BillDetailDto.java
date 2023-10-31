@@ -1,14 +1,11 @@
 package com.example.spring.CafeManagerApplication.dto;
 
-import com.example.spring.CafeManagerApplication.entity.BillDetail;
-import jakarta.persistence.Column;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class BillRequestDto {
+public class BillDetailDto {
 
     private String name;
 
@@ -18,6 +15,6 @@ public class BillRequestDto {
 
     private String paymentMethod;
 
-    private List<ProductIdDto> products;
+    private List<ProductDto> products;
 
 }

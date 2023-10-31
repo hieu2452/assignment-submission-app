@@ -1,6 +1,7 @@
 package com.example.spring.CafeManagerApplication.service.ServiceImpl;
 
-import com.example.spring.CafeManagerApplication.dto.BillRequestDto;
+import com.example.spring.CafeManagerApplication.dto.BillDetailDto;
+import com.example.spring.CafeManagerApplication.dto.ProductDto;
 import com.example.spring.CafeManagerApplication.dto.ProductIdDto;
 import com.example.spring.CafeManagerApplication.entity.*;
 import com.example.spring.CafeManagerApplication.repository.BillDetailRepository;
@@ -25,27 +26,27 @@ public class BillServiceImpl implements BillService {
     private ProductRepository productRepository;
     @Override
     @Transactional
-    public ResponseEntity<?> addNewBill(BillRequestDto billRequestDto) {
+    public ResponseEntity<?> addNewBill(BillDetailDto billDetailDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         UserEntity user = (UserEntity) authentication.getPrincipal();
 
         Bill bill = new Bill();
 
-        bill.setName(billRequestDto.getName());
-        bill.setEmail(billRequestDto.getEmail());
-        bill.setContactNumber(billRequestDto.getContactNumber());
-        bill.setPaymentMethod(billRequestDto.getPaymentMethod());
+        bill.setName(billDetailDto.getName());
+        bill.setEmail(billDetailDto.getEmail());
+        bill.setContactNumber(billDetailDto.getContactNumber());
+        bill.setPaymentMethod(billDetailDto.getPaymentMethod());
         bill.setUser(user);
 
         Bill savedBill = billRepository.saveAndFlush(bill);
 
-        for(ProductIdDto productIdDto : billRequestDto.getProducts()){
+        for(ProductDto productDto  : billDetailDto.getProducts()){
             System.out.println("CHECKKKKKKK");
-            BillDetailKey billDetailKey = new BillDetailKey(savedBill.getId(),productIdDto.getProductId());
-            Product product = productRepository.findById(productIdDto.getProductId())
+            BillDetailKey billDetailKey = new BillDetailKey(savedBill.getId(),productDto.getProductId());
+            Product product = productRepository.findById(productDto.getProductId())
                     .orElseThrow();
-            BillDetail billDetail = new BillDetail(billDetailKey,savedBill,product,productIdDto.getQuantity());
+            BillDetail billDetail = new BillDetail(billDetailKey,savedBill,product,productDto.getQuantity());
             billDetailRepository.save(billDetail);
         }
 

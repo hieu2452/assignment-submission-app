@@ -1,6 +1,6 @@
 package com.example.spring.CafeManagerApplication.controllers;
 
-import com.example.spring.CafeManagerApplication.dto.BillRequestDto;
+import com.example.spring.CafeManagerApplication.dto.BillDetailDto;
 import com.example.spring.CafeManagerApplication.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class BillController {
     private BillService billService;
 
     @PostMapping("add")
-    public ResponseEntity<?> addNewBill(@RequestBody BillRequestDto billRequestDto){
-        return billService.addNewBill(billRequestDto);
+    public ResponseEntity<?> addNewBill(@RequestBody BillDetailDto billDetailDto){
+        return billService.addNewBill(billDetailDto);
     }
 }
