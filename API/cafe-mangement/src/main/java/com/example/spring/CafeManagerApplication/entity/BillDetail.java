@@ -27,12 +27,12 @@ public class BillDetail {
         this.quantity = quantity;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("billId")
     @JoinColumn(name = "bill_id")
     private Bill bill;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("productId")
     @JoinColumn(name = "product_id")
     private Product product;

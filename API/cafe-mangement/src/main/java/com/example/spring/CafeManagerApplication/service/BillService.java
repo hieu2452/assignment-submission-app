@@ -5,4 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface BillService {
     ResponseEntity<?> addNewBill(BillDetailDto billDetailDto);
+
+    ResponseEntity<?> getAllBill();
 }

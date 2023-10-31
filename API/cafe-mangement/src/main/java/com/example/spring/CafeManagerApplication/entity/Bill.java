@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +38,13 @@ public class Bill {
     @Column(name = "createdDate")
     private LocalDate createdDate = LocalDate.now();
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "bill")
+//    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "bill")
     private List<BillDetail> billDetails = new ArrayList<>();
 
+//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
     private UserEntity user;
 
     public Bill(Integer id, String name, String email, String contactNumber, String paymentMethod, LocalDate createdDate, UserEntity user) {

@@ -16,6 +16,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class BillServiceImpl implements BillService {
     @Autowired
@@ -27,9 +31,8 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional
     public ResponseEntity<?> addNewBill(BillDetailDto billDetailDto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        UserEntity user = (UserEntity) authentication.getPrincipal();
+        UserEntity user = getUserFromAuth();
 
         Bill bill = new Bill();
 
@@ -42,7 +45,7 @@ public class BillServiceImpl implements BillService {
         Bill savedBill = billRepository.saveAndFlush(bill);
 
         for(ProductDto productDto  : billDetailDto.getProducts()){
-            System.out.println("CHECKKKKKKK");
+
             BillDetailKey billDetailKey = new BillDetailKey(savedBill.getId(),productDto.getProductId());
             Product product = productRepository.findById(productDto.getProductId())
                     .orElseThrow();
@@ -51,5 +54,54 @@ public class BillServiceImpl implements BillService {
         }
 
         return new ResponseEntity<>("Create bill successfully", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getAllBill() {
+
+        UserEntity user = getUserFromAuth();
+
+        List<Bill> bills = billRepository.findAll();
+
+
+        List<BillDetailDto> detailDtos = bills.stream().map(this::mapBillDetailDto).toList();
+
+        return new ResponseEntity<>(detailDtos,HttpStatus.OK);
+    }
+
+    private BillDetailDto mapBillDetailDto(Bill bill){
+
+        BillDetailDto billDetailDto = new BillDetailDto();
+
+        billDetailDto.setId(bill.getId());
+        billDetailDto.setName(bill.getName());
+        billDetailDto.setEmail(bill.getEmail());
+        billDetailDto.setContactNumber(bill.getContactNumber());
+        billDetailDto.setPaymentMethod(bill.getPaymentMethod());
+
+        List<ProductDto> products = bill.getBillDetails().stream().map( x -> mapProductDto(x.getProduct(),x.getQuantity())).collect(Collectors.toList());
+
+
+
+        billDetailDto.setProducts(products);
+
+        return billDetailDto;
+    }
+
+    private ProductDto mapProductDto(Product product, Integer quantity){
+
+        ProductDto productDto = new ProductDto();
+        productDto.setProductId(product.getId());
+        productDto.setName(product.getName());
+        productDto.setPrice(product.getPrice());
+        productDto.setQuantity(quantity);
+        productDto.setCategory(productDto.getCategory());
+
+        return productDto;
+    }
+
+    private UserEntity getUserFromAuth(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (UserEntity) authentication.getPrincipal();
     }
 }
