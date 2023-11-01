@@ -17,7 +17,7 @@ export class SignupComponent implements OnInit {
   password = true;
   confirmPassword = true;
   signupForm:any = FormGroup;
-  responseMessage:any;
+  responseMessage:any="";
   
   constructor(private formBuilder:FormBuilder,
     private router:Router,
@@ -29,29 +29,29 @@ export class SignupComponent implements OnInit {
 
   ngOnInit(): void {
     this.signupForm = this.formBuilder.group({
-      name:[null , [Validators.required]],
-      email:[null , Validators.required],
-      contactNumber:[null , [Validators.required]],
+      username:[null , [Validators.required]],
+      // email:[null , Validators.required],
+      // contactNumber:[null , [Validators.required]],
       password:[null , Validators.required],
-      confirmPassword:[null , [Validators.required]]
+      // confirmPassword:[null , [Validators.required]]
     })
   }
 
-  validateSubmit(){
-    if(this.signupForm.controls['password'].value != this.signupForm.controls['confirmPassword'].value){
-      return true;
-    }else{
-      return false;
-    }
-  }
+  // validateSubmit(){
+  //   if(this.signupForm.controls['password'].value != this.signupForm.controls['confirmPassword'].value){
+  //     return true;
+  //   }else{
+  //     return false;
+  //   }
+  // }
 
   handleSubmit(){
     this.ngxService.start();
     var formDate = this.signupForm.value;
     var data = {
-      name: formDate.name,
-      email: formDate.email,
-      contactNumber: formDate.contactNumber,
+      username: formDate.username,
+      // email: formDate.email,
+      // contactNumber: formDate.contactNumber,
       password: formDate.password,
     }
 

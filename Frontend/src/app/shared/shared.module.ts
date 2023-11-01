@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { AccordionAnchorDirective, AccordionLinkDirective, AccordionDirective } from './accordion';
 
 
+
 @NgModule({
   declarations: [
     AccordionAnchorDirective,
@@ -14,6 +15,6 @@ import { AccordionAnchorDirective, AccordionLinkDirective, AccordionDirective } 
     AccordionLinkDirective,
     AccordionDirective
    ],
-  providers: [ ]
+  providers: []
 })
 export class SharedModule { }

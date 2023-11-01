@@ -10,7 +10,8 @@ export class GlobalConstants{
 
     public static contactRegex:string = "^[e0-9]{10,10}$";
 
+    public static unauthroized: string = "You are not authorized person to access this page.";
     //Variable
-    public static error:string = "error";
+    public static error: string = "error";
     
 }
