@@ -20,8 +20,11 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    public Category(Integer id, String name) {
+    private String enable;
+
+    public Category(Integer id, String name, String enable) {
         this.id = id;
         this.name = name;
+        this.enable = enable;
     }
 }

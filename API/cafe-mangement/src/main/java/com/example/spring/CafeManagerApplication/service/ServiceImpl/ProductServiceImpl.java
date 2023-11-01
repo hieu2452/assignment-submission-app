@@ -6,6 +6,7 @@ import com.example.spring.CafeManagerApplication.entity.Product;
 import com.example.spring.CafeManagerApplication.exception.ProductExistException;
 import com.example.spring.CafeManagerApplication.repository.CategoryRepository;
 import com.example.spring.CafeManagerApplication.repository.ProductRepository;
+import com.example.spring.CafeManagerApplication.security.JWTAuthenticationFilter;
 import com.example.spring.CafeManagerApplication.service.FileUpload;
 import com.example.spring.CafeManagerApplication.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -29,6 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private CategoryRepository categoryRepository;
     @Autowired
     private FileUpload fileUpload;
+
 
 //    @Override
 //    @Transactional
@@ -78,6 +81,8 @@ public class ProductServiceImpl implements ProductService {
 
         return product;
     }
+
+
 
 //    private Product productMapper(ProductDto productDto){
 //        Product product = new Product();
