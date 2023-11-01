@@ -20,7 +20,7 @@ public class Category {
     @Column(name = "name")
     private String name;
 
-    private String enable;
+    private String enable = "true";
 
     public Category(Integer id, String name, String enable) {
         this.id = id;

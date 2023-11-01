@@ -8,6 +8,7 @@ public interface CategoryRepository extends JpaRepository<Category,Integer> {
 
 
     Category findByName(String name);
+    Boolean existsByName(String name);
 
     @Query("UPDATE Category c SET c.enable = ?2 WHERE c.id = ?1")
     @Modifying

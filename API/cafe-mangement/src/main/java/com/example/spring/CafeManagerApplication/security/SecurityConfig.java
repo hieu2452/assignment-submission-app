@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unAuthorized()))
                 .authorizeHttpRequests(req ->
                                 req.requestMatchers("/auth/**").permitAll()
-                                        .requestMatchers("/category/**").hasAuthority("admin")
+                                        .requestMatchers("/category/**").hasAuthority("manager")
                                         .requestMatchers("/api/test/**").permitAll()
                                         .anyRequest()
                                         .authenticated()

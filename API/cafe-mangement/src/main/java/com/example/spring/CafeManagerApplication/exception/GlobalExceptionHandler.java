@@ -16,4 +16,13 @@ public class GlobalExceptionHandler {
         e.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(e,HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(ProductNotFoundException exception){
+        ErrorResponse e = new ErrorResponse();
+        e.setStatus(HttpStatus.NOT_FOUND.value());
+        e.setMessage(exception.getMessage());
+        e.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(e,HttpStatus.NOT_FOUND);
+    }
 }

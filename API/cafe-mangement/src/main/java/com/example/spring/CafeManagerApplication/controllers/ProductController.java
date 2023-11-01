@@ -34,4 +34,14 @@ public class ProductController {
     public ResponseEntity<?> getAllProduct() {
         return productService.getAllProduct();
     }
+
+    @PostMapping("update")
+    public ResponseEntity<?> updateProduct(@RequestParam("files") MultipartFile file, @RequestParam("model") String model) throws IOException {
+        return productService.updateProduct(file,model);
+    }
+
+    @DeleteMapping("enable/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id) throws IOException {
+        return productService.updateProductStatus(id);
+    }
 }

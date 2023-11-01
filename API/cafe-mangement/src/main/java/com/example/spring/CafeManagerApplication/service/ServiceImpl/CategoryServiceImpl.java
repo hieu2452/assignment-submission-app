@@ -27,12 +27,19 @@ public class CategoryServiceImpl implements CategoryService {
         if(!validateCategoryMap(requestMap))
             return new ResponseEntity<>("You have submitted wrong format, pleas try again", HttpStatus.BAD_REQUEST);
 
+        if(categoryRepository.existsByName(requestMap.get("name")))
+            return new ResponseEntity<>("Category already exists", HttpStatus.BAD_REQUEST);
+
         Category category = new Category();
         category.setName(requestMap.get("name"));
         categoryRepository.save(category);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> getAllCategories() {
+        return new ResponseEntity<>(categoryRepository.findAll(),HttpStatus.OK);
+    }
 
 
     @Override
@@ -52,6 +59,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private boolean validateCategoryMap(Map<String, String> requestMap) {
-        return requestMap.containsKey("enable");
+        return requestMap.containsKey("name");
     }
 }

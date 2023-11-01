@@ -8,5 +8,6 @@ import java.util.Map;
 public interface CategoryService {
     ResponseEntity<?> addNewCategory(Map<String, String> requestMap);
 
+    ResponseEntity<?> getAllCategories();
     ResponseEntity<?> enableCate(Integer id);
 }

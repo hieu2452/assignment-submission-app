@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +39,7 @@ public class Bill {
 
 
     @Column(name = "createdDate")
-    private LocalDate createdDate = LocalDate.now();
+    private LocalDateTime createdDate = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
 
 //    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "bill")
@@ -47,7 +50,7 @@ public class Bill {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    public Bill(Integer id, String name, String email, String contactNumber, String paymentMethod, LocalDate createdDate, UserEntity user) {
+    public Bill(Integer id, String name, String email, String contactNumber, String paymentMethod, LocalDateTime createdDate, UserEntity user) {
         this.id = id;
         this.name = name;
         this.email = email;

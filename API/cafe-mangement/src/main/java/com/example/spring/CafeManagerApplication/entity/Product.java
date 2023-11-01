@@ -41,7 +41,7 @@ public class Product {
     private Integer price;
 
     @Column(name = "status")
-    private String status;
+    private String status = "available";
 
     @Column(name = "imageUrl")
     private String imageUrl;
