@@ -84,7 +84,7 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-    private Product productMapper(ProductDto productDto, Product product){
+    private void productMapper(ProductDto productDto, Product product){
 
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
@@ -94,7 +94,6 @@ public class ProductServiceImpl implements ProductService {
 
         product.setCategory(category);
 
-        return product;
     }
 
 
@@ -132,6 +131,25 @@ public class ProductServiceImpl implements ProductService {
 
 //        productRepository.save(product);
         return new ResponseEntity<>("update successfully", HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getProductById(Integer id) {
+        Optional<Product> optional = productRepository.findById(id);
+
+        if(optional.isEmpty()) throw new ProductNotFoundException("Product not found");
+
+        return new ResponseEntity<>(optional.get(),HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getByCategory(Integer id) {
+
+        List<Product> products = productRepository.getProductsByCategory(id);
+
+        if(products.isEmpty()) throw new ProductNotFoundException("Products not found");
+
+        return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
 

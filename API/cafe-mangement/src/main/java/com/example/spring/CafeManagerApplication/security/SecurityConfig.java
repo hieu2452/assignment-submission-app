@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unAuthorized()))
                 .authorizeHttpRequests(req ->
                                 req.requestMatchers("/auth/**").permitAll()
-                                        .requestMatchers("/**").permitAll()
+//                                        .requestMatchers("/**").permitAll()
                                         .requestMatchers(AUTH_WHITELIST).permitAll()
                                         .requestMatchers("/api/test/**").permitAll()
                                         .anyRequest()
