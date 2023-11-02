@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { jwtDecode } from "jwt-decode"
+ import { MenuItems } from 'src/app/shared/menu-items';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -17,6 +18,7 @@ export class AppSidebarComponent implements OnDestroy {
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
+    public menuItems:MenuItems
   ) {
     this.tokenPayload = jwtDecode(this.token);
     this.userRole = this.tokenPayload?.role;
