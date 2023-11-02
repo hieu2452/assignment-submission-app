@@ -10,6 +10,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 //import java.security.KeyPair;
@@ -26,7 +27,7 @@ public class JwtGenerator {
     }
 
     public String generateToken(
-            Map<String,Object> extractClaims,
+            Map<String, List<String>> extractClaims,
             UserDetails userDetails) {
 
         return Jwts
@@ -34,7 +35,7 @@ public class JwtGenerator {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 *24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 48))
                 .signWith(getSignInKey(),SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -18,4 +18,8 @@ public interface ProductService {
 
     ResponseEntity<String> updateProduct(MultipartFile file,String model) throws IOException;
 
+    ResponseEntity<?> getProductById(Integer id);
+
+    ResponseEntity<?> getByCategory(Integer id);
+
 }

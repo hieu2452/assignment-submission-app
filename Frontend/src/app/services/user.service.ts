@@ -1,5 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -7,6 +9,8 @@ import { environment } from 'src/environments/environment';
 })
 export class UserService {
   url = environment.apiUrl;
+  private currentUserSource = new BehaviorSubject<any | null>(null);
+  currentUser$ = this.currentUserSource.asObservable();
   constructor(private httpClient:HttpClient) { }
 
   signup(data:any) {
@@ -18,7 +22,31 @@ export class UserService {
   login(data:any) {
     return this.httpClient.post(this.url+"/auth/login", data,{
       headers:new HttpHeaders().set('Content-Type', 'application/json')
-    })
+    }).pipe(
+      map(response => {
+        const user = response;
+        if(user) {
+          this.setCurrentUser(user);
+        }
+        return user
+      })
+    )
+  }
+
+  setCurrentUser(user : any) {
+    const roles = this.getDecodedToken(user.accessToken).role;
+    console.log(roles)
+    user.roles = roles;
+    localStorage.setItem('user',JSON.stringify(user));
+    this.currentUserSource.next(user);
+  }
+
+  getDecodedToken(token: string) {
+    return JSON.parse(atob(token.split('.')[1]));
+  }
+
+  getProduct() {
+    return this.httpClient.get(this.url+"/product/get");
   }
 
   checkToken(){
