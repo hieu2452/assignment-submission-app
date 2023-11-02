@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { jwtDecode } from "jwt-decode"
+import { HttpClient } from '@angular/common/http';
+import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -17,6 +19,7 @@ export class AppSidebarComponent implements OnDestroy {
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
+    private userService:UserService
   ) {
     this.tokenPayload = jwtDecode(this.token);
     this.userRole = this.tokenPayload?.role;
@@ -28,4 +31,13 @@ export class AppSidebarComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
+
+  getProduct() {
+    this.userService.getProduct().subscribe({
+      next: response =>{
+        console.log(response);
+      },
+      error: err => console.log(err)
+    })
+  }  
 }

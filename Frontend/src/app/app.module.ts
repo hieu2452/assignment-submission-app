@@ -13,10 +13,11 @@ import { SharedModule } from './shared/shared.module';
 import { FullComponent } from './layouts/full/full.component';
 import { AppHeaderComponent } from './layouts/full/header/header.component';
 import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SignupComponent } from './signup/signup.component';
 import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER} from 'ngx-ui-loader';
 import { LoginComponent } from './login/login.component';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig={
   text:"Loading...",
@@ -51,7 +52,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig={
     HttpClientModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [],
+  providers: [{ provide: HTTP_INTERCEPTORS, multi: true, useClass: JwtInterceptor }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

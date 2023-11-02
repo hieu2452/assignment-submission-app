@@ -10,6 +10,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 //import java.security.KeyPair;
@@ -26,7 +27,7 @@ public class JwtGenerator {
     }
 
     public String generateToken(
-            Map<String,Object> extractClaims,
+            Map<String, List<String>> extractClaims,
             UserDetails userDetails) {
 
         return Jwts

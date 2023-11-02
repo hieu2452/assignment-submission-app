@@ -18,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class  AuthenticationService implements com.example.spring.CafeManagerApplication.service.AuthenticationService {
@@ -45,11 +48,11 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
 
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
-        Role roles = roleRepository.findByName("employee").orElseThrow();
-        user.setRoles(Collections.singletonList(roles));
-
+        Role role = roleRepository.findByName("employee").orElseThrow();
+        user.setRoles(Collections.singletonList(role));
+        Map<String,List<String>> roles = mapRole(user.getRoles());
         UserEntity savedUser = userRepository.save(user);
-        var token = jwtGenerator.generateToken(user);
+        var token = jwtGenerator.generateToken(roles,user);
         return new ResponseEntity<>( new AuthResponseDTO(token, user.getUsername()),HttpStatus.OK);
     }
 
@@ -67,9 +70,18 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         );
 
         UserEntity user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow();
+        Map<String,List<String>> roles = mapRole(user.getRoles());
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        var token = jwtGenerator.generateToken(user);
+        var token = jwtGenerator.generateToken(roles,user);
         return new ResponseEntity<>(new AuthResponseDTO(token, user.getUsername()),HttpStatus.OK);
+    }
+
+    private Map<String, List<String>> mapRole(List<Role> roles){
+        List<String> roleName = roles.stream().map(Role::getName).toList();
+        Map<String,List<String>> authorities = new HashMap<>();
+        authorities.put("role",roleName);
+        return authorities;
     }
 }
