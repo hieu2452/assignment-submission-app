@@ -22,6 +22,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String[] AUTH_WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
 
     private final CustomUserDetailsService userDetailsService;
 
@@ -37,6 +48,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unAuthorized()))
                 .authorizeHttpRequests(req ->
                                 req.requestMatchers("/auth/**").permitAll()
+                                        .requestMatchers(AUTH_WHITELIST).permitAll()
                                         .requestMatchers("/category/**").hasAuthority("manager")
                                         .requestMatchers("/api/test/**").permitAll()
                                         .anyRequest()

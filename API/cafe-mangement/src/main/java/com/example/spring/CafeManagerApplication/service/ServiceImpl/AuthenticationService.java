@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
-public class AuthenticationService implements com.example.spring.CafeManagerApplication.service.AuthenticationService {
+public class  AuthenticationService implements com.example.spring.CafeManagerApplication.service.AuthenticationService {
     private final UserRepository userRepository;
     private final JwtGenerator jwtGenerator;
     private final RoleRepository roleRepository;
