@@ -6,7 +6,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Data
+@NoArgsConstructor
 public class ProductDto {
 
     private Integer productId;
@@ -21,4 +24,9 @@ public class ProductDto {
 
     private String category;
 
+    public ProductDto(Integer quantity, String name, Integer price) {
+        this.quantity = quantity;
+        this.name = name;
+        this.price = price;
+    }
 }

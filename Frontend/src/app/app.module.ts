@@ -17,11 +17,8 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SignupComponent } from './signup/signup.component';
 import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER} from 'ngx-ui-loader';
 import { LoginComponent } from './login/login.component';
-<<<<<<< HEAD
 import { DashboardComponent } from './dashboard/dashboard.component';
-=======
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
->>>>>>> 2d3e0eb8874e8626ce87d96fd3e33c6862968682
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig={
   text:"Loading...",

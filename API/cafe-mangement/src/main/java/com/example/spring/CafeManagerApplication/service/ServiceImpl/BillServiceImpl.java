@@ -1,5 +1,7 @@
 package com.example.spring.CafeManagerApplication.service.ServiceImpl;
 
+import com.example.spring.CafeManagerApplication.Utils.CafeUtils;
+import com.example.spring.CafeManagerApplication.Utils.EmailUtils;
 import com.example.spring.CafeManagerApplication.dto.BillDetailDto;
 import com.example.spring.CafeManagerApplication.dto.ProductDto;
 import com.example.spring.CafeManagerApplication.dto.ProductIdDto;
@@ -16,8 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,10 +32,12 @@ public class BillServiceImpl implements BillService {
     private BillDetailRepository billDetailRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private EmailUtils emailUtils;
     @Override
     @Transactional
     public ResponseEntity<?> addNewBill(BillDetailDto billDetailDto) {
-
+        billDetailDto.setCreatedDate(LocalDateTime.now());
         UserEntity user = getUserFromAuth();
 
         Bill bill = new Bill();
@@ -53,7 +59,16 @@ public class BillServiceImpl implements BillService {
             billDetailRepository.save(billDetail);
         }
 
-        return new ResponseEntity<>("Create bill successfully", HttpStatus.OK);
+        Optional<Bill> optional = billRepository.findById(savedBill.getId());
+        if(optional.isEmpty()) return null;
+
+        Bill bill_ = optional.get();
+
+        BillDetailDto billDetail = mapBillDetailDto(bill_);
+
+        emailUtils.sendInvoiceEmail(savedBill.getEmail(), CafeUtils.createPdf(billDetail));
+
+        return new ResponseEntity<>("Create bill successfully! Please check your email for invoice", HttpStatus.OK);
     }
 
     @Override
@@ -69,6 +84,19 @@ public class BillServiceImpl implements BillService {
         return new ResponseEntity<>(detailDtos,HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> getBillById(Integer id) {
+        Optional<Bill> optional = billRepository.findById(id);
+        if(optional.isEmpty()) return new ResponseEntity<>("Bill not found", HttpStatus.NOT_FOUND);
+
+        Bill bill = optional.get();
+
+        BillDetailDto billDetailDto = mapBillDetailDto(bill);
+
+
+        return new ResponseEntity<>(billDetailDto,HttpStatus.OK);
+    }
+
     private BillDetailDto mapBillDetailDto(Bill bill){
 
         BillDetailDto billDetailDto = new BillDetailDto();
@@ -78,6 +106,7 @@ public class BillServiceImpl implements BillService {
         billDetailDto.setEmail(bill.getEmail());
         billDetailDto.setContactNumber(bill.getContactNumber());
         billDetailDto.setPaymentMethod(bill.getPaymentMethod());
+        billDetailDto.setCreatedDate(bill.getCreatedDate());
 
         List<ProductDto> products = bill.getBillDetails().stream().map( x -> mapProductDto(x.getProduct(),x.getQuantity())).collect(Collectors.toList());
 

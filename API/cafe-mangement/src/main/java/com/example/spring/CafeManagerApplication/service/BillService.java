@@ -7,4 +7,6 @@ public interface BillService {
     ResponseEntity<?> addNewBill(BillDetailDto billDetailDto);
 
     ResponseEntity<?> getAllBill();
+
+    ResponseEntity<?> getBillById(Integer id);
 }

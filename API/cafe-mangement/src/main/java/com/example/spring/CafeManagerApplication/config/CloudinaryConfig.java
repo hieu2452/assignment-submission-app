@@ -3,6 +3,7 @@ package com.example.spring.CafeManagerApplication.config;
 import com.cloudinary.Cloudinary;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,4 +23,13 @@ public class CloudinaryConfig {
 
         return new Cloudinary(config);
     }
+
+//    @Bean
+//    public JavaMailSenderImpl mailSender() {
+//        JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
+//
+//        javaMailSender.setProtocol("smtp");
+//
+//        return javaMailSender;
+//    }
 }
