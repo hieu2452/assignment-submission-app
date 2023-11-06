@@ -1,5 +1,6 @@
 package com.example.spring.CafeManagerApplication.service;
 
+import com.example.spring.CafeManagerApplication.Utils.ProductFilters;
 import com.example.spring.CafeManagerApplication.dto.ProductDto;
 import com.example.spring.CafeManagerApplication.entity.Product;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public interface ProductService {
 //    ResponseEntity<?> addNewProduct(ProductDto productDto);
-    ResponseEntity<List<Product>> getAllProduct();
+    ResponseEntity<List<Product>> getAllProduct(ProductFilters productFilters);
     ResponseEntity<?> addNewProduct(MultipartFile file,String model) throws IOException;
 
     ResponseEntity<String> updateProductStatus(Integer id);

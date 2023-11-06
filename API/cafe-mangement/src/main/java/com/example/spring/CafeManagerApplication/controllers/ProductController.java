@@ -1,5 +1,6 @@
 package com.example.spring.CafeManagerApplication.controllers;
 
+import com.example.spring.CafeManagerApplication.Utils.ProductFilters;
 import com.example.spring.CafeManagerApplication.dto.ProductDto;
 import com.example.spring.CafeManagerApplication.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,8 +32,8 @@ public class ProductController {
     }
 
     @GetMapping("get")
-    public ResponseEntity<?> getAllProduct() {
-        return productService.getAllProduct();
+    public ResponseEntity<?> getAllProduct(@ModelAttribute ProductFilters productFilters) {
+        return productService.getAllProduct(productFilters);
     }
 
     @GetMapping("getByCategory/{id}")

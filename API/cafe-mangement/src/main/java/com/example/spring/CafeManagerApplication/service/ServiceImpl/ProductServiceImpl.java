@@ -1,5 +1,7 @@
 package com.example.spring.CafeManagerApplication.service.ServiceImpl;
 
+import com.example.spring.CafeManagerApplication.Utils.ProductFilters;
+import com.example.spring.CafeManagerApplication.Utils.ProductSpec;
 import com.example.spring.CafeManagerApplication.dto.ProductDto;
 import com.example.spring.CafeManagerApplication.entity.Category;
 import com.example.spring.CafeManagerApplication.entity.Product;
@@ -11,6 +13,7 @@ import com.example.spring.CafeManagerApplication.service.FileUpload;
 import com.example.spring.CafeManagerApplication.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -61,11 +64,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<List<Product>> getAllProduct() {
+    public ResponseEntity<List<Product>> getAllProduct(ProductFilters productFilters) {
 
-        List<Product> products = productRepository.findAll();
+        Specification<Product> spec = ProductSpec.filterBy(productFilters);
 
-        if(products.isEmpty()) return new ResponseEntity<>(new ArrayList<>(),HttpStatus.INTERNAL_SERVER_ERROR);
+        List<Product> products = productRepository.findAll(spec);
+
+        if(products.isEmpty()) throw new ProductNotFoundException("Products not found");
 
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
