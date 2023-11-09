@@ -25,4 +25,22 @@ public class GlobalExceptionHandler {
         e.setTimeStamp(System.currentTimeMillis());
         return new ResponseEntity<>(e,HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(UserNotAllow exception){
+        ErrorResponse e = new ErrorResponse();
+        e.setStatus(HttpStatus.UNAUTHORIZED.value());
+        e.setMessage(exception.getMessage());
+        e.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(e,HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(UserNotFound exception){
+        ErrorResponse e = new ErrorResponse();
+        e.setStatus(HttpStatus.NOT_FOUND.value());
+        e.setMessage(exception.getMessage());
+        e.setTimeStamp(System.currentTimeMillis());
+        return new ResponseEntity<>(e,HttpStatus.NOT_FOUND);
+    }
 }

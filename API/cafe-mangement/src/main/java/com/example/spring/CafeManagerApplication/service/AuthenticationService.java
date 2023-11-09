@@ -9,4 +9,6 @@ public interface AuthenticationService {
     ResponseEntity<?> register(RegisterDto registerDto);
     ResponseEntity<?> login(LoginDto LoginDto);
 
+    ResponseEntity<?> enableUser(Long userId);
+
 }
