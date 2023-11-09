@@ -9,7 +9,6 @@ import { UserService } from './services/user.service';
 export class AppComponent {
   title = 'Frontend';
   constructor(private userService: UserService) {
-
   }
   setCurrentUser() {
     const userSring = localStorage.getItem('user');

@@ -10,7 +10,7 @@ export class AuthService {
   constructor(private router:Router) { }
 
   public isAuthenticated():boolean{
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     //console.log("token is : " + token);
       if(!token){
       this.router.navigate(['/']);

@@ -9,16 +9,16 @@ import { MenuItems } from 'src/app/shared/menu-items';
 })
 export class AppSidebarComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
-  userRole:any;
-  token:any = localStorage.getItem('accessToken');
-  tokenPayload:any;
+  userRole: any;
+  token: any = localStorage.getItem('accessToken');
+  tokenPayload: any;
 
   private _mobileQueryListener: () => void;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    public menuItems:MenuItems
+    public menuItems: MenuItems
   ) {
     this.tokenPayload = jwtDecode(this.token);
     this.userRole = this.tokenPayload?.role;
@@ -29,5 +29,14 @@ export class AppSidebarComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  checkRole() {
+    for (let item of this.menuItems.getMenuItem()) {
+      if (this.userRole.some( (r : any) => r === item.role)){
+        return true;
+      }
+    }
+    return false;
   }
 }

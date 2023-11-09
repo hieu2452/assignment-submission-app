@@ -34,9 +34,8 @@ export class UserService {
   }
 
   setCurrentUser(user : any) {
-    const roles = this.getDecodedToken(user.accessToken).role;
-    console.log(roles)
-    user.roles = roles;
+    // const roles = this.getDecodedToken(user.accessToken).role;
+    // user.roles = roles;
     localStorage.setItem('user',JSON.stringify(user));
     this.currentUserSource.next(user);
   }

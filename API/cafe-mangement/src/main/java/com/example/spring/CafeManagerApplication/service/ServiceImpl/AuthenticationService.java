@@ -92,8 +92,9 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         if(optional.isEmpty()) throw new UserNotFound("User not found");
 
         UserEntity user = optional.get();
+        user.setActive(true);
 
-        return new ResponseEntity<>(user,HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("Active account successfully",HttpStatus.NO_CONTENT);
     }
 
     private Map<String, List<String>> mapRole(List<Role> roles){

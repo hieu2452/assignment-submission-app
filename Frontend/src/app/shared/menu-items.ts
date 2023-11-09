@@ -9,8 +9,8 @@ export interface Menu{
 }
 
 const MENUITEMS = [
-    {state:'product', name:'Manage  Product',type:'link', icon:'inventory_2',role:''},
-    {state:'category' , name:'Manage Category', type:'link', icon:'category', role:''},
+    {state:'product', name:'Manage  Product',type:'link', icon:'inventory_2',role:'manager'},
+    {state:'category' , name:'Manage Category', type:'link', icon:'category', role:'manager'},
 ]
 
 @Injectable()
