@@ -6,13 +6,13 @@ import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { take } from 'rxjs/operators';
 import { log } from 'console';
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
+
   user = {};
 
   constructor(private dialog: MatDialog, private router: Router, private userSerivce: UserService) {

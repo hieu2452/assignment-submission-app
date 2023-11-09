@@ -31,7 +31,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig={
 }
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppComponent,
     HomeComponent,
     BestSellerComponent,
