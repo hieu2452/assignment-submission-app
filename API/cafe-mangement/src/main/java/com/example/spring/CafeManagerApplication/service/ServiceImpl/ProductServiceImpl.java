@@ -35,17 +35,6 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private FileUpload fileUpload;
 
-
-//    @Override
-//    @Transactional
-//    public ResponseEntity<?> addNewProduct(ProductDto productDto) {
-//        if(productRepository.existsByName(productDto.getName()))
-//            throw new ProductExistException("Product already exist");
-//        Product product = productMapper(productDto);
-//        productRepository.save(product);
-//        return new ResponseEntity<>(product, HttpStatus.OK);
-//    }
-
     @Override
     @Transactional
     public ResponseEntity<?> addNewProduct(MultipartFile file, String model) throws IOException {
@@ -66,6 +55,17 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ResponseEntity<List<Product>> getAllProduct(ProductFilters productFilters) {
 
+        Specification<Product> spec = ProductSpec.filterBy(productFilters,true);
+
+        List<Product> products = productRepository.findAll(spec);
+
+        if(products.isEmpty()) throw new ProductNotFoundException("Products not found");
+
+        return new ResponseEntity<>(products,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<Product>> getAllProductAdmin(ProductFilters productFilters) {
         Specification<Product> spec = ProductSpec.filterBy(productFilters);
 
         List<Product> products = productRepository.findAll(spec);
@@ -109,11 +109,9 @@ public class ProductServiceImpl implements ProductService {
         if(optional.isEmpty()) throw new ProductNotFoundException("Product not found");
 
         Product product = optional.get();
-        if(product.getStatus().equals("available"))
-            product.setStatus("unavailable");
-        else product.setStatus("available");
+        product.setStatus(!product.getStatus());
 
-        return new ResponseEntity<>("enable product successfully", HttpStatus.OK);
+        return new ResponseEntity<>("update product " +product.getName() + " status " + product.getStatus(), HttpStatus.OK);
     }
 
     @Override

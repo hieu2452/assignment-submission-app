@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +37,11 @@ public class ProductController {
         return productService.getAllProduct(productFilters);
     }
 
+    @GetMapping("admin/get")
+    public ResponseEntity<?> getAllProductAdmin(@ModelAttribute ProductFilters productFilters) {
+        return productService.getAllProductAdmin(productFilters);
+    }
+
     @GetMapping("getByCategory/{id}")
     public ResponseEntity<?> getByCategory(@PathVariable Integer id) {
         return productService.getByCategory(id);
@@ -49,7 +55,7 @@ public class ProductController {
         return productService.updateProduct(file,model);
     }
 
-    @DeleteMapping("enable/{id}")
+    @DeleteMapping("update-status/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer id) throws IOException {
         return productService.updateProductStatus(id);
     }

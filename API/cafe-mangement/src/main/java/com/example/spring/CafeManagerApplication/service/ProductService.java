@@ -13,6 +13,7 @@ import java.util.List;
 public interface ProductService {
 //    ResponseEntity<?> addNewProduct(ProductDto productDto);
     ResponseEntity<List<Product>> getAllProduct(ProductFilters productFilters);
+    ResponseEntity<List<Product>> getAllProductAdmin(ProductFilters productFilters);
     ResponseEntity<?> addNewProduct(MultipartFile file,String model) throws IOException;
 
     ResponseEntity<String> updateProductStatus(Integer id);

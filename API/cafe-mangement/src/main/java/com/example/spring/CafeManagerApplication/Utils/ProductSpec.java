@@ -20,6 +20,13 @@ public class ProductSpec {
                 .and(orderByPrice(productFilters.getPrice()));
     }
 
+    public static Specification<Product> filterBy(ProductFilters productFilters, boolean status) {
+        return Specification
+                .where(hasCategory(productFilters.getCategory()))
+                .and(orderByPrice(productFilters.getPrice()))
+                .and(filtersByStatus(status));
+    }
+
     public static Specification<Product> hasCategory(String name) {
         return (root, query, cb) -> {
             if(name.isEmpty()) {
@@ -41,6 +48,12 @@ public class ProductSpec {
                 return cb.conjunction();
             }
             return cb.conjunction();
+        };
+    }
+
+    public static Specification<Product> filtersByStatus(boolean status) {
+        return (root, query, cb) -> {
+            return cb.equal(root.get("status"),status);
         };
     }
 

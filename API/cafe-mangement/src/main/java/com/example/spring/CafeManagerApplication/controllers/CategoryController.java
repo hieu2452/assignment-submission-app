@@ -24,8 +24,8 @@ public class CategoryController {
         return categoryService.addNewCategory(requestMap);
     }
 
-    @PostMapping("enable")
-    public ResponseEntity<?> enableCategory(@RequestParam Integer id){
+    @PostMapping("enable/{id}")
+    public ResponseEntity<?> enableCategory(@PathVariable Integer id){
         return categoryService.enableCate(id);
     }
 

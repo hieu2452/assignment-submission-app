@@ -17,7 +17,7 @@ public class Product {
     @Column(name = "id")
     private Integer id;
 
-    public Product(Integer id, String name, Category category, String description, Integer price, String status) {
+    public Product(Integer id, String name, Category category, String description, Integer price, Boolean status) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -41,7 +41,7 @@ public class Product {
     private Integer price;
 
     @Column(name = "status")
-    private String status = "available";
+    private Boolean status = true;
 
     @Column(name = "imageUrl")
     private String imageUrl;

@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -34,6 +35,16 @@ public class SecurityConfig {
             "/swagger-ui/**"
     };
 
+    private static final String[] ADMIN_AUTHORIZE_API = {
+            "/product/add",
+            "/product/admin/get",
+            "/product/update",
+            "/product/update-status/**",
+            "/category/enable/**",
+            "/category/add",
+            "/admin/**"
+    };
+
     private final CustomUserDetailsService userDetailsService;
 
     @Autowired
@@ -49,7 +60,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                                 req.requestMatchers("/auth/**").permitAll()
                                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                                        .requestMatchers("/admin/**").hasAuthority("manager")
+                                        .requestMatchers(ADMIN_AUTHORIZE_API).hasAuthority("manager")
                                         .requestMatchers("/api/test/**").permitAll()
                                         .anyRequest()
                                         .authenticated()
@@ -88,5 +99,9 @@ public class SecurityConfig {
     @Bean
     public JwtEntryPoint unAuthorized(){
         return new JwtEntryPoint();
+    }
+    @Bean
+    public AccessDenied accessDenied(){
+        return new AccessDenied();
     }
 }
