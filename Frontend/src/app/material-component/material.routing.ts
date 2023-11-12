@@ -18,6 +18,7 @@ export const MaterialRoutes: Routes = [
         component:ManageCategoryComponent,
         data:{
             expectRole:['']
-        }
-    }
+        },
+        
+    },
 ];

@@ -1,7 +1,8 @@
 <mat-nav-list appAccordion>
-    <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuItem()" routerLinkActive="selected" group="{{menuitem.state}}">
+    <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuItem()" routerLinkActive="selected"
+        group="{{menuitem.state}}">
 
-        <a class="" appAccordionToggle [routerLink]="['/cafe/', menuitem.state]" *ngIf="menuitem.type === 'link' && checkRole()">
+        <a class="" appAccordionToggle [routerLink]="['/cafe/', menuitem.state]" *appHasRole="menuitem.role">
             <mat-icon>{{menuitem.icon}}</mat-icon>
             <span>{{menuitem.name}}</span>
         </a>

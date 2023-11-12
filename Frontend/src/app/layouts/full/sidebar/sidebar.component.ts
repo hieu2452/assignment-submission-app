@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { jwtDecode } from "jwt-decode"
 import { MenuItems } from 'src/app/shared/menu-items';
+import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -14,14 +15,19 @@ export class AppSidebarComponent implements OnDestroy {
   tokenPayload: any;
 
   private _mobileQueryListener: () => void;
+  r: any;
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    public menuItems: MenuItems
+    public menuItems: MenuItems,
+    private userService: UserService
   ) {
-    this.tokenPayload = jwtDecode(this.token);
-    this.userRole = this.tokenPayload?.role;
+    userService.currentUser$.subscribe({
+      next: user => {
+        this.userRole = user.roles
+      }
+    })
     this.mobileQuery = media.matchMedia('(min-width: 768px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
@@ -31,12 +37,4 @@ export class AppSidebarComponent implements OnDestroy {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  checkRole() {
-    for (let item of this.menuItems.getMenuItem()) {
-      if (this.userRole.some( (r : any) => r === item.role)){
-        return true;
-      }
-    }
-    return false;
-  }
 }

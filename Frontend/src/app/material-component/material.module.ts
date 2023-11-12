@@ -29,7 +29,7 @@ import { ProductComponent } from './dialog/product/product.component';
   declarations: [
     ViewBillProductsComponent,
     ManageProductComponent,
-    ProductComponent
+    ProductComponent,
   ]
 })
 export class MaterialComponentsModule {}
