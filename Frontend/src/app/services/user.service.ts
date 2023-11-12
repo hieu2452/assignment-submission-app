@@ -44,10 +44,6 @@ export class UserService {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
-  getProduct() {
-    return this.httpClient.get(this.url+"/product/get");
-  }
-
   checkToken(){
     return this.httpClient.get(this.url+"/user/checkToken");
   }

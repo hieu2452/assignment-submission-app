@@ -14,7 +14,7 @@ import { GlobalConstants } from 'src/app/shared/global-constants';
 })
 export class ManageProductComponent implements OnInit {
   // displayedColumns: string[] = ['name' , 'category' , 'description' , 'price' , 'quantity', 'image' , 'edit'];
-  displayedColumns: string[] = ['name' , 'category' , 'description' , 'price' ,  'edit'];
+  displayedColumns: string[] = ['name' , 'category_id' , 'description' , 'price' ,'image',  'edit'];
   dataSource:any;
   length1:any;
   responseMessage:any;
