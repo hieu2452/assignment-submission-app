@@ -74,7 +74,7 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         UserEntity user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow();
 
         if(!user.getActive()) {
-            throw new UserNotAllow("Please wait for admin to grant you access to this application");
+            throw new UserNotAllow("Wait for admin to grant you access to this application");
         }
         Map<String,List<String>> roles = mapRole(user.getRoles());
 

@@ -9,15 +9,17 @@ export const MaterialRoutes: Routes = [
     {
         path:'product',
         component:ManageProductComponent,
+        canActivate: [RouteGuardService],
         data:{
-            expectRole:['']
+            expectRole:['manager']
         }
     },
     {
         path:'category',
         component:ManageCategoryComponent,
+        canActivate: [RouteGuardService],
         data:{
-            expectRole:['']
+            expectRole:['manager']
         }
     }
 ];
