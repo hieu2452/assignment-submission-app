@@ -15,19 +15,20 @@ import { AppHeaderComponent } from './layouts/full/header/header.component';
 import { AppSidebarComponent } from './layouts/full/sidebar/sidebar.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SignupComponent } from './signup/signup.component';
-import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER} from 'ngx-ui-loader';
+import { NgxUiLoaderConfig, NgxUiLoaderModule, SPINNER } from 'ngx-ui-loader';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { ErrorInterceptor } from './_interceptors/error.interceptor';
 
-const ngxUiLoaderConfig: NgxUiLoaderConfig={
-  text:"Loading...",
-  textColor:"#FFFFFF",
+const ngxUiLoaderConfig: NgxUiLoaderConfig = {
+  text: "Loading...",
+  textColor: "#FFFFFF",
   textPosition: "center-center",
   fgsColor: "#7b1fa2",
-  fgsType:SPINNER.squareJellyBox,
-  fgsSize:100,
-  hasProgressBar:false
+  fgsType: SPINNER.squareJellyBox,
+  fgsSize: 100,
+  hasProgressBar: false
 }
 
 @NgModule({
@@ -40,7 +41,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig={
     AppSidebarComponent,
     SignupComponent,
     LoginComponent,
-   ],
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -53,7 +54,8 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig={
     HttpClientModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, multi: true, useClass: JwtInterceptor }],
+  providers: [{ provide: HTTP_INTERCEPTORS, multi: true, useClass: JwtInterceptor },
+  { provide: HTTP_INTERCEPTORS, multi: true, useClass: ErrorInterceptor }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

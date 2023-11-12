@@ -31,7 +31,7 @@ export class ManageProductComponent implements OnInit {
   }
 
   tableData(){
-    this.productService.getProducts().subscribe((response:any)=>{
+    this.productService.getProductsForAdmin().subscribe((response:any)=>{
       this.dataSource = new MatTableDataSource(response);
     },(error:any)=>{
       console.log(error.error?.message);

@@ -23,8 +23,8 @@ export class ProductService {
     })
   }
 
-  getProducts(){
-    return this.httpClient.get<Product[]>(`${this.url}/product/get`);
+  getProductsForAdmin(){
+    return this.httpClient.get<Product[]>(`${this.url}/product/admin/get`);
   }
 
   getProductsById(id:any){
