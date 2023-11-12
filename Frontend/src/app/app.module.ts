@@ -20,6 +20,7 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
+import { HasRoleDirective } from './_directives/has-role.directive';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   text: "Loading...",
@@ -41,6 +42,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppSidebarComponent,
     SignupComponent,
     LoginComponent,
+    HasRoleDirective
   ],
   imports: [
     BrowserModule,
