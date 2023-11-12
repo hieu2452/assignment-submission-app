@@ -29,10 +29,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(UserNotAllow exception){
         ErrorResponse e = new ErrorResponse();
-        e.setStatus(HttpStatus.UNAUTHORIZED.value());
+        e.setStatus(HttpStatus.FORBIDDEN.value());
         e.setMessage(exception.getMessage());
         e.setTimeStamp(System.currentTimeMillis());
-        return new ResponseEntity<>(e,HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(e,HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler

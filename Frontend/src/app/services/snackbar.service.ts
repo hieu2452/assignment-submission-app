@@ -16,6 +16,13 @@ export class SnackbarService {
         duration: 2000,
         panelClass: ['black-snackbar']
       });
+    } else if (action === 'success') {
+      this.snackBar.open(message, '', {
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        duration: 2000,
+        panelClass: ['green-snackbar']
+      });
     }
     else {
       this.snackBar.open(message, 'Register Succesfully!', {

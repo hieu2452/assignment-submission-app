@@ -16,10 +16,9 @@ export class ErrorInterceptor implements HttpInterceptor {
                 if (error) {
                     switch (error.status) {
                         case 401:
-                            console.log('sd')
-                            localStorage.removeItem('user');
-                            localStorage.removeItem('accessToken');
-                            this.router.navigate(['']);
+                            // localStorage.removeItem('user');
+                            // localStorage.removeItem('accessToken');
+                            // this.router.navigate(['']);
                             break;
                     }
                 }

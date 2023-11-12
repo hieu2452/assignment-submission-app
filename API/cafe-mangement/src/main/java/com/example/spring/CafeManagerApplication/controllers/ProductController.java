@@ -26,7 +26,7 @@ public class ProductController {
 //    }
 
     @PostMapping(value = "add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addNewProduct1(@RequestParam("files") MultipartFile file, @RequestParam("model") String model) throws IOException {
+    public ResponseEntity<?> addNewProduct1(@RequestParam("file") MultipartFile file, @RequestParam("model") String model) throws IOException {
 
 
         return productService.addNewProduct(file,model);

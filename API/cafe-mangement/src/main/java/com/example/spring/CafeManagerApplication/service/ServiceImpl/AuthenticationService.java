@@ -52,9 +52,9 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         Role role = roleRepository.findByName("employee").orElseThrow();
         user.setRoles(Collections.singletonList(role));
 
-        UserEntity savedUser = userRepository.save(user);
+        userRepository.save(user);
 
-        return new ResponseEntity<>( "Register successfully",HttpStatus.OK);
+        return ResponseEntity.ok("");
     }
 
     @Transactional

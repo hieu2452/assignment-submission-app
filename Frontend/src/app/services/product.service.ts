@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Product } from '../model/product.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,29 +10,25 @@ import { Product } from '../model/product.model';
 export class ProductService {
 
   url = environment.apiUrl;
-  constructor(private httpClient:HttpClient) { }
+  constructor(private httpClient: HttpClient) { }
 
-  add(data:any){
-    return this.httpClient.post(this.url +"/product/add" , data,{
-      headers: new HttpHeaders().set('Content-Type' , "application/json")
-    })
+  add(data: any) {
+    return this.httpClient.post(this.url + "/product/add", data)
   }
 
-  update(data:any){
-    return this.httpClient.post(this.url +"/product/update" , data,{
-      headers: new HttpHeaders().set('Content-Type' , "application/json")
-    })
+  update(data: any) {
+    return this.httpClient.post(this.url + "/product/update", data)
   }
 
-  getProductsForAdmin(){
+  getProductsForAdmin() {
     return this.httpClient.get<Product[]>(`${this.url}/product/admin/get`);
   }
 
-  getProductsById(id:any){
+  getProductsById(id: any) {
     return this.httpClient.get(`${this.url}/product/get/${id}`);
   }
 
-  getProductsByCategory(id:any){
+  getProductsByCategory(id: any) {
     return this.httpClient.get(`${this.url}/product/getByCategory/${id}`);
   }
 

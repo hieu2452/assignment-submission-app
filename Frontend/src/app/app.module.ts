@@ -42,7 +42,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     AppSidebarComponent,
     SignupComponent,
     LoginComponent,
-    HasRoleDirective
+    HasRoleDirective,
   ],
   imports: [
     BrowserModule,
