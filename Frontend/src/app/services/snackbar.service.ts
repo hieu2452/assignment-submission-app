@@ -18,7 +18,7 @@ export class SnackbarService {
       });
     }
     else {
-      this.snackBar.open(message, 'Register Succesfully!', {
+      this.snackBar.open(message, 'Succesfully!', {
         horizontalPosition: 'center',
         verticalPosition: 'top',
         duration: 2000,
