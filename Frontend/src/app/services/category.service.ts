@@ -11,7 +11,7 @@ export class CategoryService {
   constructor(private httpClient:HttpClient) { }
 
   add(data:any){
-    return this.httpClient.post(this.url +"/category/add" , data,{
+    return this.httpClient.post<Category[]>(`${this.url}/category/add`, data,{
       headers: new HttpHeaders().set('Content-Type' , "application/json")
     })
   }

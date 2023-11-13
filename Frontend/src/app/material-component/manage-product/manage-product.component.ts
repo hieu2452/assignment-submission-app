@@ -7,6 +7,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
 import { ProductComponent } from '../dialog/product/product.component';
+import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
 
 @Component({
   selector: 'app-manage-product',
@@ -65,30 +66,68 @@ export class ManageProductComponent implements OnInit {
     })
   }
 
-  handleEditAction(value: any) {
+  handleEditAction(values:any){
     const dialogConfog = new MatDialogConfig();
-    dialogConfog.data = {
-      action: 'Edit',
-      data: value
+    dialogConfog.data={
+      action:'Edit',
+      data:values
     };
-    dialogConfog.width = "850px";
-    const dialogRef = this.dialog.open(ProductComponent, dialogConfog);
-    this.router.events.subscribe(() => {
+    const dialogRef = this.dialog.open(ProductComponent , dialogConfog);
+    this.router.events.subscribe(()=>{
       dialogRef.close();
-    });
-    const sub = dialogRef.componentInstance.onAddProduct.subscribe((response) => {
+    }); 
+    const sub = dialogRef.componentInstance.onEditProduct.subscribe((response)=>{
       this.tableData();
     })
   }
-
-  handleDeleteAction(value: any) {
-
+  handleDeleteAction(values:any){
+    const dialogConfog = new MatDialogConfig();
+    dialogConfog.data={
+      message:'delete '+ values.name + ' product ',
+      confirmation:true
+    };
+    const dialogRef = this.dialog.open(ConfirmationComponent , dialogConfog);
+    const sub = dialogRef.componentInstance.onEmistStatusChange.subscribe((response)=>{
+      this.deleteProduct(values.id);
+      dialogRef.close();
+    })
+  }
+  
+  deleteProduct(id:any){
+    this.productService.delete(id).subscribe((response:any)=>{
+      this.tableData();
+      this.responseMessage = response?.message;
+      //alert("Product is Deleted");
+      this.SnackbarService.openSnackBar(this.responseMessage , "success");
+    },(error:any)=>{
+      console.log(error.error?.message);
+      if(error.error?.message){
+        this.responseMessage = error.error?.message; 
+      }else{
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.SnackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    })
   }
 
-  onChange(status: any, id: any) {
-    console.log(id)
-    this.productService.updateStatus(id).subscribe({
-      next: response => console.log(response)
+  onChange(status:any , id:any){
+    var data = {
+      status:status.toString(),
+      id:id
+    }
+    this.productService.updateStatus(id).subscribe((response:any)=>{
+      this.responseMessage = response?.message;
+      this.SnackbarService.openSnackBar(this.responseMessage , "success");
+    },(error:any)=>{
+      //console.log(error.error?.message);
+      if(error.error?.message){
+        this.responseMessage = error.error?.message; 
+      }else{
+        //alert("status is updated successfully");
+
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.SnackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     })
   }
 }
