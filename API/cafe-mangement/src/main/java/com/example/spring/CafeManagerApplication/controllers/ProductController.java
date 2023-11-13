@@ -55,7 +55,7 @@ public class ProductController {
         return productService.updateProduct(file,model);
     }
 
-    @DeleteMapping("update-status/{id}")
+    @PutMapping("update-status/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer id) throws IOException {
         return productService.updateProductStatus(id);
     }
