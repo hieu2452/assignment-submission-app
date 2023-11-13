@@ -8,47 +8,48 @@ import { GlobalConstants } from '../shared/global-constants';
   providedIn: 'root'
 })
 export class RouteGuardService {
-  constructor(public auth:AuthService,
-    public router:Router,
-    private snackbarService:SnackbarService) { }
+  constructor(public auth: AuthService,
+    public router: Router,
+    private snackbarService: SnackbarService) { }
 
-    canActivate(router:ActivatedRouteSnapshot):boolean{
-      let expectRoleArray = router.data;
-      expectRoleArray = expectRoleArray.expectedRole;
+  canActivate(router: ActivatedRouteSnapshot): boolean {
+    let expectRoleArray = router.data;
+    expectRoleArray = expectRoleArray.expectRole;
+    const token: any = localStorage.getItem('accessToken');
 
-      const token:any = localStorage.getItem('accessToken');
+    var tokenPayload: any;
 
-      var tokenPayload:any;
+    try {
+      tokenPayload = jwtDecode(token);
+      console.log(tokenPayload)
+    } catch (err) {
+      localStorage.clear();
+      this.router.navigate(['/']);
+    }
 
-      try{
-        tokenPayload = jwtDecode(token);
-      }catch(err){
-        localStorage.clear();
-        this.router.navigate(['/']);
-      }
+    let expectedRole = '';
 
-      let expectedRole = '';
-
-      for(let i = 0 ;  i < expectRoleArray.length; i++){
-        if(expectRoleArray[i] == tokenPayload.role){
-          expectedRole = tokenPayload.role;
-        }
-      }
-
-
-      if(tokenPayload.role == 'user' || tokenPayload.role == 'admin'){
-        if(this.auth.isAuthenticated() && tokenPayload.role == expectedRole){
-          return true;
-        }
-        
-        this.snackbarService.openSnackBar(GlobalConstants.unauthroized , GlobalConstants.error);
-        this.router.navigate(['/cafe/dashboard']);
-        return false;
-      }
-      else{
-        this.router.navigate(['/']);  
-        localStorage.clear();
-        return false;
+    for (let i = 0; i < expectRoleArray.length; i++) {
+      if (tokenPayload.role.some((r: any) => r == expectRoleArray[i])) {
+        // console.log(tokenPayload.role)
+        expectedRole = tokenPayload.role;
       }
     }
+
+
+    if (tokenPayload.role == 'manager' || tokenPayload.role == 'admin') {
+      if (this.auth.isAuthenticated() && tokenPayload.role == expectedRole) {
+        return true;
+      }
+
+      this.snackbarService.openSnackBar(GlobalConstants.unauthroized, GlobalConstants.error);
+      this.router.navigate(['/cafe/dashboard']);
+      return false;
+    }
+    else {
+      this.router.navigate(['/']);
+      localStorage.clear();
+      return false;
+    }
+  }
 }

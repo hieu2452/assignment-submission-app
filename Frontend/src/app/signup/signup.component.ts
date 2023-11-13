@@ -59,12 +59,14 @@ export class SignupComponent implements OnInit {
       this.ngxService.stop();
       this.dialogRef.close();
       this.responseMessage = response?.message;
+      console.log(response)
       this.snackbarService.openSnackBar(this.responseMessage,"");
       this.router.navigate(['/']);
     },(error)=>{
       this.ngxService.stop();
-      if(error.error?.message){
-        this.responseMessage = error.error?.message;
+      console.log(error)
+      if(error.error){
+        this.responseMessage = error.error;
       }
       else{
         this.responseMessage=GlobalConstants.genericError;

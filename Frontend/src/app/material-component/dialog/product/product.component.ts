@@ -23,8 +23,8 @@ export class ProductComponent implements OnInit {
   display: FormControl = new FormControl("", Validators.required);
   file_store: FileList | undefined;
   file_list: Array<string> = [];
-  selectedFile:any = undefined;
-  
+  selectedFile: any = undefined;
+
 
   constructor(@Inject(MAT_DIALOG_DATA) public dialogData: any,
     private formBulider: FormBuilder,
@@ -36,6 +36,7 @@ export class ProductComponent implements OnInit {
 
   ngOnInit(): void {
     this.productForm = this.formBulider.group({
+      id: [null],
       name: [null, [Validators.required, Validators.pattern(GlobalConstants.nameRegex)]],
       category: [null, Validators.required],
       price: [null, Validators.required],
@@ -45,6 +46,7 @@ export class ProductComponent implements OnInit {
       this.dialogAction = "Edit";
       this.action = "Update";
       this.productForm.patchValue(this.dialogData.data);
+      this.productForm.controls.category.setValue(this.dialogData.data.category.name)
     }
     this.getCategorys();
   }
@@ -74,6 +76,14 @@ export class ProductComponent implements OnInit {
     });
   }
 
+  onFileSelected(event: any) {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0];
+      this.selectedFile = file;
+    }
+  }
+
+
   handleSubmit() {
     if (this.dialogAction === "Edit") {
       this.edit();
@@ -82,21 +92,26 @@ export class ProductComponent implements OnInit {
     }
   }
   add() {
+    const form_Data: FormData = new FormData();
     var formData = this.productForm.value;
     var data = {
       name: formData.name,
-      category: formData.category,
-      price: formData.price,
       description: formData.description,
-      imageUrl: formData.imageUrl
+      price: formData.price,
+      category: formData.category,
+    }
+    if (this.selectedFile) {
+      form_Data.append('file', this.selectedFile);
     }
 
-    this.productService.add(data).subscribe((response: any) => {
+    form_Data.append('model', JSON
+      .stringify(data));
+
+
+    this.productService.add(form_Data).subscribe((response: any) => {
       this.dialogRef.close();
       this.onAddProduct.emit();
-      this.responseMessage = response.message;
-      alert("Successfully Add Product");
-      this.snackbarService.openSnackBar(this.responseMessage, "success");
+      this.snackbarService.openSnackBar("Successfully Add Product", "success");
     }, (error) => {
       this.dialogRef.close();
       console.error(error);
@@ -115,11 +130,11 @@ export class ProductComponent implements OnInit {
     var data = {
       id: this.dialogData.data.id,
       name: formData.name,
-      category : formData.category,
+      category: formData.category,
       price: formData.price,
-      description:formData.description,
-      imageUrl: formData.imageUrl
+      description: formData.description,
     }
+
     this.productService.update(data).subscribe((response: any) => {
       this.dialogRef.close();
       this.onEditProduct.emit();

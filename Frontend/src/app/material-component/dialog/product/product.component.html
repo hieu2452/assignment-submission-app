@@ -11,6 +11,12 @@
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="productForm">
         <div fxFlex fxLayout="column">
+            <div *ngIf="action == 'Update'" fxLayout="row wrap">
+                <mat-form-field appearance="standard" fxFlex>
+                    <mat-label>Name</mat-label>
+                    <input matInput formControlName="id" required [readonly]="true">
+                </mat-form-field>
+            </div>
             <div fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Name</mat-label>
@@ -35,7 +41,7 @@
                     <mat-label>Category</mat-label>
                     <mat-select formControlName="category">
                         <mat-option *ngFor="let category of categorys"
-                            [value]="category.id">{{category.name}}</mat-option>
+                            [value]="category.name">{{category.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
@@ -56,11 +62,12 @@
                 <br><br>
                 <mat-form-field style="width: 100%;">
                     <mat-label>File matInput</mat-label>
-                    <button mat-icon-button matPrefix (click)="f_input.click()">
+                    <!-- <button mat-icon-button matPrefix (click)="f_input.click()">
                         <mat-icon>attach_file</mat-icon>
-                    </button>
+                    </button> -->
                     <input type="text" readonly matInput [formControl]="display" />
-                    <input type="file" multiple hidden #f_input (change)="handleFileInputChange(f_input.files!)" />
+                    <!-- <input type="file" multiple hidden #f_input (change)="handleFileInputChange(f_input.files!)" /> -->
+                    <input type="file" nbInput fullWidth fieldSize="small" (change)="onFileSelected($event)">
                     <mat-error>this field is required</mat-error>
                 </mat-form-field>
                 <br><br>
@@ -71,7 +78,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-    <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()" [disabled]="!(productForm.valid && productForm.dirty)">
+    <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()"
+        [disabled]="!(productForm.valid && productForm.dirty)">
         <mat-icon>save</mat-icon> {{action}}
     </button>
     <button mat-raised-button color="warn" mat-dialog-close>

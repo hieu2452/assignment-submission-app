@@ -26,7 +26,7 @@ public class ProductController {
 //    }
 
     @PostMapping(value = "add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addNewProduct1(@RequestParam("files") MultipartFile file, @RequestParam("model") String model) throws IOException {
+    public ResponseEntity<?> addNewProduct1(@RequestParam("file") MultipartFile file, @RequestParam("model") String model) throws IOException {
 
 
         return productService.addNewProduct(file,model);
@@ -55,7 +55,7 @@ public class ProductController {
         return productService.updateProduct(file,model);
     }
 
-    @DeleteMapping("update-status/{id}")
+    @PutMapping("update-status/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Integer id) throws IOException {
         return productService.updateProductStatus(id);
     }

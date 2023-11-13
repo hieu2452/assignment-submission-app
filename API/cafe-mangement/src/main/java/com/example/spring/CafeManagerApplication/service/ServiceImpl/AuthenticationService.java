@@ -52,9 +52,9 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         Role role = roleRepository.findByName("employee").orElseThrow();
         user.setRoles(Collections.singletonList(role));
 
-        UserEntity savedUser = userRepository.save(user);
+        userRepository.save(user);
 
-        return new ResponseEntity<>( "Register successfully",HttpStatus.OK);
+        return ResponseEntity.ok("");
     }
 
     @Transactional
@@ -74,7 +74,7 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         UserEntity user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow();
 
         if(!user.getActive()) {
-            throw new UserNotAllow("Please wait for admin to grant you access to this application");
+            throw new UserNotAllow("Wait for admin to grant you access to this application");
         }
         Map<String,List<String>> roles = mapRole(user.getRoles());
 
