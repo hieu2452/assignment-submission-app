@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDto {
 
-    private Integer productId;
+    private Integer id;
 
     private Integer quantity;
 

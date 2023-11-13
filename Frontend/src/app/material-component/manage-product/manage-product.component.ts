@@ -86,6 +86,9 @@ export class ManageProductComponent implements OnInit {
   }
 
   onChange(status: any, id: any) {
-
+    console.log(id)
+    this.productService.updateStatus(id).subscribe({
+      next: response => console.log(response)
+    })
   }
 }

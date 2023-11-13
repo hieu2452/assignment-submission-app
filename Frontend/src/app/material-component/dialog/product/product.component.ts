@@ -100,8 +100,8 @@ export class ProductComponent implements OnInit {
       price: formData.price,
       category: formData.category,
     }
-    if (this.selectedFile) {
-      form_Data.append('file', this.selectedFile);
+    if (this.file_store) {
+      form_Data.append('file', this.file_store[0]);
     }
 
     form_Data.append('model', JSON
@@ -126,6 +126,8 @@ export class ProductComponent implements OnInit {
   }
 
   edit() {
+    const form_Data: FormData = new FormData();
+
     var formData = this.productForm.value;
     var data = {
       id: this.dialogData.data.id,
@@ -134,13 +136,17 @@ export class ProductComponent implements OnInit {
       price: formData.price,
       description: formData.description,
     }
+    if (this.file_store) {
+      form_Data.append('file', this.file_store[0]);
+    }
 
-    this.productService.update(data).subscribe((response: any) => {
+    form_Data.append('model', JSON
+      .stringify(data));
+
+    this.productService.update(form_Data).subscribe((response: any) => {
       this.dialogRef.close();
       this.onEditProduct.emit();
-      this.responseMessage = response.message;
-      alert("Successfully Update Product");
-      this.snackbarService.openSnackBar(this.responseMessage, "success");
+      this.snackbarService.openSnackBar("Successfully Update Product", "success");
     }, (error) => {
       this.dialogRef.close();
       console.error(error);

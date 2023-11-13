@@ -104,28 +104,28 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ResponseEntity<String> updateProductStatus(Integer id) {
+    public ResponseEntity<?> updateProductStatus(Integer id) {
         Optional<Product> optional = productRepository.findById(id);
         if(optional.isEmpty()) throw new ProductNotFoundException("Product not found");
 
         Product product = optional.get();
         product.setStatus(!product.getStatus());
 
-        return new ResponseEntity<>("update product " +product.getName() + " status " + product.getStatus(), HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<String> updateProduct(MultipartFile file,String model) throws IOException {
+    public ResponseEntity<?> updateProduct(MultipartFile file,String model) throws IOException {
 
         ProductDto productDto = new ObjectMapper().readValue(model, ProductDto.class);
 
-        Optional<Product> optional = productRepository.findById(productDto.getProductId());
+        Optional<Product> optional = productRepository.findById(productDto.getId());
         if(optional.isEmpty()) throw new ProductNotFoundException("Product not found");
 
         Product product = optional.get();
 
-        if(file.isEmpty()) {
+        if(file==null) {
             productMapper(productDto,product);
         } else {
             String url = fileUpload.uploadFile(file);
@@ -133,7 +133,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
 //        productRepository.save(product);
-        return new ResponseEntity<>("update successfully", HttpStatus.OK);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @Override
