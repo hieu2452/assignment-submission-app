@@ -24,6 +24,7 @@ export class ProductComponent implements OnInit {
   file_store: FileList | undefined;
   file_list: Array<string> = [];
   selectedFile: any = undefined;
+  data = {};
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public dialogData: any,
@@ -136,6 +137,7 @@ export class ProductComponent implements OnInit {
       price: formData.price,
       description: formData.description,
     }
+    this.data = data;
     if (this.file_store) {
       form_Data.append('file', this.file_store[0]);
     }
@@ -148,7 +150,7 @@ export class ProductComponent implements OnInit {
       this.onEditProduct.emit();
       this.snackbarService.openSnackBar("Successfully Update Product", "success");
     }, (error) => {
-      this.dialogRef.close();
+      this.dialogRef.close({ event: this.action, data: this.data });
       console.error(error);
       if (error.error?.message) {
         this.responseMessage = error.error?.message;

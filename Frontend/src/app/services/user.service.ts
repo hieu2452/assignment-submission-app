@@ -36,8 +36,6 @@ export class UserService {
   }
 
   setCurrentUser(user: any) {
-    // const roles = this.getDecodedToken(user.accessToken).role;
-    // user.roles = roles;
     this.tokenPayload = jwtDecode(user.accessToken);
     user.roles = this.tokenPayload?.role;
     localStorage.setItem('user', JSON.stringify(user));
@@ -50,5 +48,14 @@ export class UserService {
 
   checkToken() {
     return this.httpClient.get(this.url + "/user/checkToken");
+  }
+
+  refreshToken(token: string) {
+    console.log(token)
+    return this.httpClient.post('http://localhost:8080/auth/refreshtoken', {
+      refreshToken: token
+    }, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+    });
   }
 }

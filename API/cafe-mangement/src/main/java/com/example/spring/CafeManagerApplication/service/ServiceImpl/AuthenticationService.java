@@ -1,18 +1,20 @@
 package com.example.spring.CafeManagerApplication.service.ServiceImpl;
 
-import com.example.spring.CafeManagerApplication.dto.AuthResponseDTO;
-import com.example.spring.CafeManagerApplication.dto.LoginDto;
-import com.example.spring.CafeManagerApplication.dto.RegisterDto;
+import com.example.spring.CafeManagerApplication.dto.*;
+import com.example.spring.CafeManagerApplication.entity.RefreshToken;
 import com.example.spring.CafeManagerApplication.entity.Role;
 import com.example.spring.CafeManagerApplication.entity.UserEntity;
+import com.example.spring.CafeManagerApplication.exception.TokenRefreshException;
 import com.example.spring.CafeManagerApplication.exception.UserNotAllow;
 import com.example.spring.CafeManagerApplication.exception.UserNotFound;
 import com.example.spring.CafeManagerApplication.repository.RoleRepository;
 import com.example.spring.CafeManagerApplication.repository.UserRepository;
 import com.example.spring.CafeManagerApplication.security.JwtGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,8 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    @Autowired
+    RefreshTokenService refreshTokenService;
 
     public AuthenticationService(UserRepository userRepository, JwtGenerator jwtGenerator, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
@@ -59,17 +63,17 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
 
     @Transactional
     public ResponseEntity<?> login(LoginDto loginDto) {
-
-        if(!userRepository.existsByUsername(loginDto.getUsername())){
-            return new ResponseEntity<>("Bad credential", HttpStatus.UNAUTHORIZED);
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginDto.getUsername(),
+                            loginDto.getPassword()
+                    )
+            );
+        }catch (Exception e){
+            throw new BadCredentialsException("username or password is incorrect");
         }
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
-                        loginDto.getPassword()
-                )
-        );
 
         UserEntity user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow();
 
@@ -78,10 +82,13 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         }
         Map<String,List<String>> roles = mapRole(user.getRoles());
 
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+
+
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         var token = jwtGenerator.generateToken(roles,user);
-        return new ResponseEntity<>(new AuthResponseDTO(token, user.getUsername()),HttpStatus.OK);
+        return new ResponseEntity<>(new AuthResponseDTO(token,refreshToken.getToken(), user.getUsername()),HttpStatus.OK);
     }
 
     @Override
@@ -102,5 +109,20 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         Map<String,List<String>> authorities = new HashMap<>();
         authorities.put("role",roleName);
         return authorities;
+    }
+
+    public ResponseEntity<?> refreshtoken(RefreshTokenRequest request){
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    Map<String,List<String>> roles = mapRole(user.getRoles());
+                    String token = jwtGenerator.generateToken(roles,user);
+                    return ResponseEntity.ok(new RefreshTokenResponse(token, requestRefreshToken));
+                })
+                .orElseThrow(() -> new TokenRefreshException(
+                        "Refresh token is not in database!"));
     }
 }

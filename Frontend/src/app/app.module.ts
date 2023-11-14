@@ -21,6 +21,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { HasRoleDirective } from './_directives/has-role.directive';
+import { AuthInterceptor } from './_interceptors/auth.interceptor';
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   text: "Loading...",
@@ -56,8 +57,9 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     HttpClientModule,
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)
   ],
-  providers: [{ provide: HTTP_INTERCEPTORS, multi: true, useClass: JwtInterceptor },
-  { provide: HTTP_INTERCEPTORS, multi: true, useClass: ErrorInterceptor }],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, multi: true, useClass: ErrorInterceptor },
+    { provide: HTTP_INTERCEPTORS, multi: true, useClass: AuthInterceptor }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

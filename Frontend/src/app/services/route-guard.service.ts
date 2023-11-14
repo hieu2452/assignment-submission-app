@@ -21,7 +21,6 @@ export class RouteGuardService {
 
     try {
       tokenPayload = jwtDecode(token);
-      console.log(tokenPayload)
     } catch (err) {
       localStorage.clear();
       this.router.navigate(['/']);
@@ -31,13 +30,12 @@ export class RouteGuardService {
 
     for (let i = 0; i < expectRoleArray.length; i++) {
       if (tokenPayload.role.some((r: any) => r == expectRoleArray[i])) {
-        // console.log(tokenPayload.role)
         expectedRole = tokenPayload.role;
       }
     }
 
 
-    if (tokenPayload.role == 'manager' || tokenPayload.role == 'admin') {
+    if (tokenPayload.role == 'manager' || tokenPayload.role == 'employee') {
       if (this.auth.isAuthenticated() && tokenPayload.role == expectedRole) {
         return true;
       }

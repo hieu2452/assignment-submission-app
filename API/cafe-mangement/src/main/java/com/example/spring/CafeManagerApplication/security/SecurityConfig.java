@@ -2,6 +2,7 @@ package com.example.spring.CafeManagerApplication.security;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,12 +13,14 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -56,7 +59,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(unAuthorized()))
                 .authorizeHttpRequests(req ->
                                 req.requestMatchers("/auth/**").permitAll()
                                         .requestMatchers(AUTH_WHITELIST).permitAll()
@@ -67,10 +69,10 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unAuthorized()))
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 
     @Bean
     public AuthenticationProvider authenticationProvider(){
@@ -91,9 +93,12 @@ public class SecurityConfig {
         return  new BCryptPasswordEncoder();
     }
 
+    @Autowired
+    @Qualifier("handlerExceptionResolver")
+    private HandlerExceptionResolver exceptionResolver;
     @Bean
     public JWTAuthenticationFilter jwtAuthenticationFilter() {
-        return new JWTAuthenticationFilter();
+        return new JWTAuthenticationFilter(exceptionResolver);
     }
 
     @Bean
