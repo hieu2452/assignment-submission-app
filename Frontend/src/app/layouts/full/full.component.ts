@@ -36,6 +36,5 @@ export class FullComponent implements OnDestroy, AfterViewInit {
 
     const user = JSON.parse(userSring);
     this.userService.setCurrentUser(user);
-
   }
 }

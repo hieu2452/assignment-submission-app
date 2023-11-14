@@ -1,17 +1,22 @@
 package com.example.spring.CafeManagerApplication.security;
 
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
@@ -20,7 +25,18 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    Claims claims = null;
+    private HandlerExceptionResolver exceptionResolver;
+
+    private static final String[] excludedEndpoints = new String[] {"/auth/refreshtoken"};
+
+    public JWTAuthenticationFilter(){
+
+    }
+
+    @Autowired
+    public JWTAuthenticationFilter(HandlerExceptionResolver exceptionResolver) {
+        this.exceptionResolver = exceptionResolver;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -31,18 +47,29 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        jwt = authHeader.substring(7);
-        username = tokenGenerator.extractUsername(jwt);
-        if(username != null &&SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            if(tokenGenerator.isTokenValid(jwt,userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,null,userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        try {
+            jwt = authHeader.substring(7);
+            username = tokenGenerator.extractUsername(jwt);
+            if(username != null &&SecurityContextHolder.getContext().getAuthentication() == null){
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                if(tokenGenerator.isTokenValid(jwt,userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,null,userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+            filterChain.doFilter(request,response);
+        }catch (ExpiredJwtException | SignatureException ex) {
+            exceptionResolver.resolveException(request, response, null, ex);
         }
-        filterChain.doFilter(request,response);
+
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return Arrays.stream(excludedEndpoints)
+                .anyMatch(e -> new AntPathMatcher().match(e, request.getServletPath()));
     }
 
 //    public boolean isAdmin(){

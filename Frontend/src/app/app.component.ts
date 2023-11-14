@@ -16,6 +16,5 @@ export class AppComponent {
 
     const user = JSON.parse(userSring);
     this.userService.setCurrentUser(user);
-
   }
 }

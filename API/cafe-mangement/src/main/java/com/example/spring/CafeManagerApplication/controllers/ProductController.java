@@ -51,7 +51,7 @@ public class ProductController {
     public ResponseEntity<?> getById(@PathVariable Integer id) { return productService.getProductById(id); }
 
     @PostMapping(value = "update",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> updateProduct(@RequestParam("files") MultipartFile file, @RequestParam("model") String model) throws IOException {
+    public ResponseEntity<?> updateProduct(@RequestParam(value = "file",required = false) MultipartFile file, @RequestParam("model") String model) throws IOException {
         return productService.updateProduct(file,model);
     }
 

@@ -52,8 +52,8 @@ public class BillServiceImpl implements BillService {
 
         for(ProductDto productDto  : billDetailDto.getProducts()){
 
-            BillDetailKey billDetailKey = new BillDetailKey(savedBill.getId(),productDto.getProductId());
-            Product product = productRepository.findById(productDto.getProductId())
+            BillDetailKey billDetailKey = new BillDetailKey(savedBill.getId(),productDto.getId());
+            Product product = productRepository.findById(productDto.getId())
                     .orElseThrow();
             BillDetail billDetail = new BillDetail(billDetailKey,savedBill,product,productDto.getQuantity());
             billDetailRepository.save(billDetail);
@@ -120,7 +120,7 @@ public class BillServiceImpl implements BillService {
     private ProductDto mapProductDto(Product product, Integer quantity){
 
         ProductDto productDto = new ProductDto();
-        productDto.setProductId(product.getId());
+        productDto.setId(product.getId());
         productDto.setName(product.getName());
         productDto.setPrice(product.getPrice());
         productDto.setQuantity(quantity);

@@ -6,6 +6,7 @@ import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { GlobalConstants } from '../shared/global-constants';
 import { UserService } from '../services/user.service';
 import { SnackbarService } from '../services/snackbar.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -14,46 +15,51 @@ import { SnackbarService } from '../services/snackbar.service';
 })
 export class LoginComponent implements OnInit {
   hide = true;
-  loginForm:any = FormGroup;
-  responseMessage:any;
-  
-  
-  constructor(private formBuilder:FormBuilder,
-    private router:Router,
-    private userService:UserService,
-    private snackbarService:SnackbarService,
-    public dialogRef:MatDialogRef<LoginComponent>,
-    private ngxService:NgxUiLoaderService,
-  ) {}
+  loginForm: any = FormGroup;
+  responseMessage: any;
+
+
+  constructor(private formBuilder: FormBuilder,
+    private router: Router,
+    private userService: UserService,
+    private snackbarService: SnackbarService,
+    public dialogRef: MatDialogRef<LoginComponent>,
+    private ngxService: NgxUiLoaderService,
+    private tokenStorage: TokenStorageService
+  ) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
-      username:[null , [Validators.required]],
-      password:[null , Validators.required]
+      username: [null, [Validators.required]],
+      password: [null, Validators.required]
     })
   }
 
-  handleSubmit(){
+  handleSubmit() {
     this.ngxService.start();
     var formData = this.loginForm.value;
     var data = {
       username: formData.username,
-      password: formData.password  
+      password: formData.password
     }
 
-    this.userService.login(data).subscribe((response:any)=>{
+    this.userService.login(data).subscribe((response: any) => {
       this.ngxService.stop();
-      
+
       this.dialogRef.close();
-      localStorage.setItem('accessToken' , response.accessToken);
+      console.log(response)
+      // localStorage.setItem('accessToken', response.accessToken);
+      this.tokenStorage.saveToken(response.accessToken)
+      this.tokenStorage.saveRefreshToken(response.refreshToken);
+      this.tokenStorage.saveUser(response);
       this.router.navigate(['/cafe/dashboard']);
-    },(error)=>{
-      if(error.error?.message){
+    }, (error) => {
+      if (error.error?.message) {
         this.responseMessage = error.error?.message;
-      }else{
+      } else {
         this.responseMessage = GlobalConstants.genericError;
       }
-      this.snackbarService.openSnackBar(this.responseMessage , GlobalConstants.error);
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     });
   }
 }

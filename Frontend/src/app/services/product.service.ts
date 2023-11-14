@@ -32,15 +32,16 @@ export class ProductService {
     return this.httpClient.get(`${this.url}/product/getByCategory/${id}`);
   }
 
-  updateStatus(id:number){
-    return this.httpClient.put(`${this.url}/product/update-status/${id}`,{
-      headers: new HttpHeaders().set('Content-Type' , "application/json")
+  updateStatus(id: number) {
+    return this.httpClient.put(`${this.url}/product/update-status/${id}`, {}, {
+      headers: new HttpHeaders().set('Content-Type', "application/json")
     })
   }
 
-  delete(id:any){
-    return this.httpClient.delete(`${this.url}/update-status/${id}`,{
-      headers: new HttpHeaders().set('Content-Type' , "application/json")
+
+  delete(id: any) {
+    return this.httpClient.delete(`${this.url}/update-status/${id}`, {
+      headers: new HttpHeaders().set('Content-Type', "application/json")
     })
   }
 

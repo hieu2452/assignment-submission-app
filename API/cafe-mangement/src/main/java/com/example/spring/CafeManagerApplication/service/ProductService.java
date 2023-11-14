@@ -16,9 +16,9 @@ public interface ProductService {
     ResponseEntity<List<Product>> getAllProductAdmin(ProductFilters productFilters);
     ResponseEntity<?> addNewProduct(MultipartFile file,String model) throws IOException;
 
-    ResponseEntity<String> updateProductStatus(Integer id);
+    ResponseEntity<?> updateProductStatus(Integer id);
 
-    ResponseEntity<String> updateProduct(MultipartFile file,String model) throws IOException;
+    ResponseEntity<?> updateProduct(MultipartFile file,String model) throws IOException;
 
     ResponseEntity<?> getProductById(Integer id);
 

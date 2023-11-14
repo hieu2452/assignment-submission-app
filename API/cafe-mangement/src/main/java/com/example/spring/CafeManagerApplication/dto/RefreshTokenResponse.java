@@ -3,16 +3,13 @@ package com.example.spring.CafeManagerApplication.dto;
 import lombok.Data;
 
 @Data
-public class AuthResponseDTO {
+public class RefreshTokenResponse {
     private String accessToken;
     private String refreshToken;
-    private String tokenType = "Bearer ";
-    private String username;
+    private String tokenType = "Bearer";
 
-    public AuthResponseDTO(String accessToken, String refreshToken, String username) {
+    public RefreshTokenResponse(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-        this.username = username;
     }
-
 }
