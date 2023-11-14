@@ -22,29 +22,29 @@ export class CategoryComponent implements OnInit {
 
   responseMessage: any;
   constructor(
-  private formBulider:FormBuilder,
-  protected categoryService:CategoryService,
-  public dialogRef: MatDialogRef<CategoryComponent>,
-  private snackbarService:SnackbarService,
-  @Inject(MAT_DIALOG_DATA) public dialogData: any,
-  private router:Router
+    private formBulider: FormBuilder,
+    protected categoryService: CategoryService,
+    public dialogRef: MatDialogRef<CategoryComponent>,
+    private snackbarService: SnackbarService,
+    @Inject(MAT_DIALOG_DATA) public dialogData: any,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
     this.categoryForm = this.formBulider.group({
-      name:[null,[Validators.required]]
+      name: [null, [Validators.required]]
     });
-    if(this.dialogData.action === 'Edit'){
+    if (this.dialogData.action === 'Edit') {
       this.dialogAction = "Edit";
       this.action = "Update";
       this.categoryForm.patchValue(this.dialogData.data);
     }
   }
 
-  handleSubmit(){
-    if(this.dialogAction === "Edit"){
+  handleSubmit() {
+    if (this.dialogAction === "Edit") {
       this.edit();
-    }else{
+    } else {
       this.add();
     }
   }
@@ -53,21 +53,21 @@ export class CategoryComponent implements OnInit {
     var data = {
       name: formData.name
     }
-    this.categoryService.add(data).subscribe((response:any)=>{
+    this.categoryService.add(data).subscribe((response: any) => {
       this.dialogRef.close();
       this.onAddCategory.emit();
       this.responseMessage = response.message;
-      this.snackbarService.openSnackBar(this.responseMessage , "success");
-    },(error)=>{
+      this.snackbarService.openSnackBar(this.responseMessage, "success");
+    }, (error) => {
       this.dialogRef.close();
       console.error(error);
-      if(error.error?.message){
+      if (error.error?.message) {
         this.responseMessage = error.error?.message;
-      }else{
+      } else {
         this.responseMessage = GlobalConstants.genericError;
       }
-      alert(this.responseMessage +" " +GlobalConstants.error);
-      this.snackbarService.openSnackBar(this.responseMessage , GlobalConstants.error);
+      alert(this.responseMessage + " " + GlobalConstants.error);
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     });
   }
   edit() {
@@ -76,22 +76,22 @@ export class CategoryComponent implements OnInit {
       id: this.dialogData.data.id,
       name: formData.name
     }
-    this.categoryService.update(data).subscribe((response:any)=>{
+    this.categoryService.update(data).subscribe((response: any) => {
       this.dialogRef.close();
       this.onEditCategory.emit();
       this.responseMessage = response.message;
       alert("Successfully Update Category");
-      this.snackbarService.openSnackBar(this.responseMessage , "success");
-    },(error)=>{
+      this.snackbarService.openSnackBar(this.responseMessage, "success");
+    }, (error) => {
       this.dialogRef.close();
       console.error(error);
-      if(error.error?.message){
+      if (error.error?.message) {
         this.responseMessage = error.error?.message;
-      }else{
+      } else {
         this.responseMessage = GlobalConstants.genericError;
       }
-      alert(this.responseMessage +" " +GlobalConstants.error);
-      this.snackbarService.openSnackBar(this.responseMessage , GlobalConstants.error);
-    });  
+      alert(this.responseMessage + " " + GlobalConstants.error);
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
   }
 }

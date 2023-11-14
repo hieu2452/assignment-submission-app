@@ -14,7 +14,7 @@ export class TokenStorageService {
     constructor(private userService: UserService) { }
 
     signOut(): void {
-        localStorage.clear();
+        localStorage.clear(); 
     }
 
     public saveToken(token: string): void {

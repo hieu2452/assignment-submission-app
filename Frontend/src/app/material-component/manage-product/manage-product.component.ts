@@ -117,7 +117,7 @@ export class ManageProductComponent implements OnInit {
     }
     this.productService.updateStatus(id).subscribe((response:any)=>{
       this.responseMessage = response?.message;
-      this.SnackbarService.openSnackBar(this.responseMessage , "success");
+      this.SnackbarService.openSnackBar("update priduct status successfully" , "success");
     },(error:any)=>{
       //console.log(error.error?.message);
       if(error.error?.message){

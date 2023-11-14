@@ -7,8 +7,8 @@ import { take } from 'rxjs/operators';
 })
 export class HasRoleDirective {
 
-  @Input() set appHasRole(roles: string) {
-    if (this.user.roles.some((r: string) => r == roles)) {
+  @Input() set appHasRole(roles: string[]) {
+    if (this.user.roles.some((r: string) => roles.includes(r))) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();

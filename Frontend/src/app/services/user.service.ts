@@ -46,24 +46,18 @@ export class UserService {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
-  // checkToken() {
-  //   return this.httpClient.get(this.url + "/user/checkToken");
-  // }
-
-  changePassword(data:any){
-    return this.httpClient.post(this.url + "/user/changePassword" , data , {
-      headers:new HttpHeaders().set('Content-Type' , 'application/json')
+  changePassword(data: any) {
+    return this.httpClient.post(this.url + "/user/changePassword", data, {
+      headers: new HttpHeaders().set('Content-Type', 'application/json')
     })
   }
 
-  getUsers(){
-    return this.httpClient.get(this.url + "/user/get");
+  getUsers() {
+    return this.httpClient.get(this.url + "/admin/get-user");
   }
 
-  update(data:any){
-    return this.httpClient.post(this.url + "/user/update" , data , {
-      headers:new HttpHeaders().set('Content-Type' , 'application/json')
-    })
+  updateUserStatus(id: number) {
+    return this.httpClient.post(this.url + "/admin/update-status/" + id, {});
   }
 
   refreshToken(token: string) {
