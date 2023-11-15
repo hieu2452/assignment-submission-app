@@ -52,6 +52,23 @@
                 </mat-error>
             </mat-form-field>
 
+            <mat-form-field apperence="standard" fxFlex>
+                <mat-label>Phone Number</mat-label>
+                <input matInput formControlName="phonenumber" required>
+                <mat-error *ngIf="signupForm.controls.phonenumber.touched && signupForm.controls.phonenumber.invalid">
+                    <span *ngIf="signupForm.controls.phonenumber.errors.required">This field is mandatory.</span>
+                    <span *ngIf="signupForm.controls.phonenumber.errors.pattern">This field is invalid.</span>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field apperence="standard" fxFlex>
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" required>
+                <mat-error *ngIf="signupForm.controls.email.touched && signupForm.controls.email.invalid">
+                    <span *ngIf="signupForm.controls.email.errors.required">This field is mandatory.</span>
+                    <span *ngIf="signupForm.controls.email.errors.pattern">This field is invalid.</span>
+                </mat-error>
+            </mat-form-field>
             <!-- <mat-form-field apperence="standard" fxFlex>
                 <mat-label>Confirm Password</mat-label>
                 <input matInput formControlName="confirmPassword" type="password" required

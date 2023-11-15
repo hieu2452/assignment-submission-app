@@ -34,6 +34,8 @@ export class SignupComponent implements OnInit {
       // contactNumber:[null , [Validators.required]],
       password:[null , Validators.required],
       // confirmPassword:[null , [Validators.required]]
+      phonenumber:[null , [Validators.required]],
+      email:[null , Validators.required],
     })
   }
 
@@ -53,6 +55,8 @@ export class SignupComponent implements OnInit {
       // email: formDate.email,
       // contactNumber: formDate.contactNumber,
       password: formDate.password,
+      phonenumber: formDate.phonenumber,
+      email: formDate.email
     }
 
     this.userService.signup(data).subscribe((response:any)=>{

@@ -18,6 +18,7 @@ import { CategoryComponent } from './dialog/category/category.component';
 import { ViewBillComponent } from './view-bill/view-bill.component';
 import { ChangePasswordComponent } from './dialog/change-password/change-password.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
+import { ManageOrderComponent } from './manage-order/manage-order.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { ManageUserComponent } from './manage-user/manage-user.component';
     ViewBillComponent,
     ChangePasswordComponent,
     ManageUserComponent,
+    ManageOrderComponent,
   ]
 })
 export class MaterialComponentsModule {}

@@ -6,6 +6,7 @@ import { ManageCategoryComponent } from './manage-category/manage-category.compo
 import { ViewBillProductsComponent } from './dialog/view-bill-products/view-bill-products.component';
 import { ViewBillComponent } from './view-bill/view-bill.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
+import { ManageOrderComponent } from './manage-order/manage-order.component';
 
 
 export const MaterialRoutes: Routes = [
@@ -35,6 +36,13 @@ export const MaterialRoutes: Routes = [
     {
         path:'user',
         component:ManageUserComponent,
+        data:{
+            expectedRole: ['']
+        }
+    },
+    {
+        path:'order',
+        component:ManageOrderComponent,
         data:{
             expectedRole: ['']
         }
