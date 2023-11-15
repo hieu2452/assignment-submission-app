@@ -87,7 +87,8 @@ export class ManageOrderComponent implements OnInit {
 
   validateSubmit() {
     var formData = this.manageOrderForm.value;
-    if (formData.addedProducts === null || this.manageOrderForm.controls['email'].value === null ||
+    console.log(formData)
+    if (formData.products === null || this.manageOrderForm.controls['email'].value === null ||
       formData.contactNumber === null || formData.paymentMethod === null) {
       return true;
     } else {
