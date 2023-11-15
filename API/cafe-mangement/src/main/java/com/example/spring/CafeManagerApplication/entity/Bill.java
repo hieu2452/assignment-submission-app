@@ -41,7 +41,7 @@ public class Bill {
     @Column(name = "createdDate")
     private LocalDateTime createdDate = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
 
-//    @JsonIgnore
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "bill")
     private List<BillDetail> billDetails = new ArrayList<>();
 

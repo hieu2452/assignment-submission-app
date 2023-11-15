@@ -14,8 +14,10 @@ export class RouteGuardService {
     private snackbarService: SnackbarService) { }
 
   canActivate(router: ActivatedRouteSnapshot): boolean {
+    
     let expectRoleArray = router.data;
     expectRoleArray = expectRoleArray.expectedRole;
+    let isAuthorized = false;
 
     const token: any = localStorage.getItem('accessToken');
 
@@ -35,7 +37,7 @@ export class RouteGuardService {
       return false;
     }
 
-    let isAuthorized = false;
+
     tokenPayload.role.some((r: any) => {
       if (expectRoleArray.includes(r)) {
         isAuthorized = true;
