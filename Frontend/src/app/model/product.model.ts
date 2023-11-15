@@ -4,5 +4,5 @@ export interface Product{
     description:string,
     price:number,
     category:any,
-    // status:string
+    quantity : number
 }

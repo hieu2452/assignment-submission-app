@@ -17,7 +17,7 @@ import { ConfirmationComponent } from '../dialog/confirmation/confirmation.compo
 })
 export class ViewBillComponent implements OnInit {
 
-  displayedColumns: string[] = ['name', 'email', 'contactNumber', 'paymentMethod', 'createdDate','view'];
+  displayedColumns: string[] = ['name', 'email', 'contactNumber', 'paymentMethod', 'createdDate', 'view'];
   dataSource: any;
   responseMessage: any;
 
@@ -26,86 +26,87 @@ export class ViewBillComponent implements OnInit {
     private snackbarService: SnackbarService,
     private router: Router) { }
 
-    ngOnInit(): void {
-      // this.tableData();
-    }
-    tableData() {
-      this.billservice.getBills().subscribe((response: any) => {
-        this.dataSource = new MatTableDataSource(response);
-      }, (error: any) => {
-        console.log(error.error?.message);
-        if (error.error?.message) {
-          this.responseMessage = error.error?.message;
-        } else {
-          this.responseMessage = GlobalConstants.genericError;
-        }
-        this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
-      })
-    }
-  
-    applyFilter(event: Event) {
-      const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
-  
-    handleViewAction(values: any) {
-      const dialogConfog = new MatDialogConfig();
-      dialogConfog.data = {
-        data: values
-      };
-      dialogConfog.width = "100%";
-      const dialogRef = this.dialog.open(ViewBillProductsComponent, dialogConfog);
-      this.router.events.subscribe(() => {
-        dialogRef.close();
-      });
-  
-    }
-    handleDeleteAction(values: any) {
-      const dialogConfog = new MatDialogConfig;
-      dialogConfog.data = {
-        message: 'delete ' + values.name + ' bill',
-        confirmation: true
-      };
-      const dialogRef = this.dialog.open(ConfirmationComponent, dialogConfog);
-      const sub = dialogRef.componentInstance.onEmistStatusChange.subscribe((response) => {
-        this.deleteBill(values.id);
-        dialogRef.close();
-      })
-    }
-    deleteBill(id: any) {
-      this.billservice.delete(id).subscribe((response: any)=>{
-        this.tableData();
-        this.responseMessage = response?.message;
-        this.snackbarService.openSnackBar(this.responseMessage, "success");
-      }, (error: any) => {
-        console.log(error.error?.message);
-        if (error.error?.message) {
-          this.responseMessage = error.error?.message;
-        } else {
-          this.responseMessage = GlobalConstants.genericError;
-        }
-        this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
-      })
-    }
-
-    downloadReportAction(values: any) {
-      var data = {
-        name: values.name,
-        email: values.email,
-        uuid: values.uuid,
-        contactNumber: values.contactNumber,
-        paymentMethod: values.paymentMethod,
-        totalAmount: values.total.toString(),
-        productDetails: values.productDetails
+  ngOnInit(): void {
+    this.tableData();
+  }
+  tableData() {
+    this.billservice.getBills().subscribe((response: any) => {
+      this.dataSource = new MatTableDataSource(response);
+    }, (error: any) => {
+      console.log(error.error?.message);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstants.genericError;
       }
-      this.downloadFile(values.uuid, data);
-    }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    })
+  }
 
-    downloadFile(fileName: string, data: any) {
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
-      this.billservice.getPdf(data).subscribe((response: any) => {
-        // saveAs(response, fileName + '.pdf');
-      })
+  handleViewAction(values: any) {
+
+    const dialogConfog = new MatDialogConfig();
+    dialogConfog.data = {
+      data: values
+    };
+    dialogConfog.width = "100%";
+    const dialogRef = this.dialog.open(ViewBillProductsComponent, dialogConfog);
+    this.router.events.subscribe(() => {
+      dialogRef.close();
+    });
+
+  }
+  handleDeleteAction(values: any) {
+    const dialogConfog = new MatDialogConfig;
+    dialogConfog.data = {
+      message: 'delete ' + values.name + ' bill',
+      confirmation: true
+    };
+    const dialogRef = this.dialog.open(ConfirmationComponent, dialogConfog);
+    const sub = dialogRef.componentInstance.onEmistStatusChange.subscribe((response) => {
+      this.deleteBill(values.id);
+      dialogRef.close();
+    })
+  }
+  deleteBill(id: any) {
+    this.billservice.delete(id).subscribe((response: any) => {
+      this.tableData();
+      this.responseMessage = response?.message;
+      this.snackbarService.openSnackBar(this.responseMessage, "success");
+    }, (error: any) => {
+      console.log(error.error?.message);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    })
+  }
+
+  downloadReportAction(values: any) {
+    var data = {
+      name: values.name,
+      email: values.email,
+      uuid: values.uuid,
+      contactNumber: values.contactNumber,
+      paymentMethod: values.paymentMethod,
+      totalAmount: values.total.toString(),
+      productDetails: values.productDetails
     }
+    this.downloadFile(values.uuid, data);
+  }
+
+  downloadFile(fileName: string, data: any) {
+
+    this.billservice.getPdf(data).subscribe((response: any) => {
+      // saveAs(response, fileName + '.pdf');
+    })
+  }
 
 }

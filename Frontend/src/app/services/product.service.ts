@@ -24,6 +24,10 @@ export class ProductService {
     return this.httpClient.get<Product[]>(`${this.url}/product/admin/get`);
   }
 
+  getProducts() {
+    return this.httpClient.get<Product[]>(`${this.url}/product/get`);
+  }
+
   getProductsById(id: any) {
     return this.httpClient.get(`${this.url}/product/get/${id}`);
   }
