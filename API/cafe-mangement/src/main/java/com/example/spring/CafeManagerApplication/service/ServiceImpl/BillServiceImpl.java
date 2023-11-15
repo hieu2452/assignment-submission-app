@@ -49,6 +49,7 @@ public class BillServiceImpl implements BillService {
         bill.setUser(user);
 
         Bill savedBill = billRepository.saveAndFlush(bill);
+        billDetailDto.setId(savedBill.getId());
 
         for(ProductDto productDto  : billDetailDto.getProducts()){
 
@@ -59,16 +60,17 @@ public class BillServiceImpl implements BillService {
             billDetailRepository.save(billDetail);
         }
 
-        Optional<Bill> optional = billRepository.findById(savedBill.getId());
-        if(optional.isEmpty()) return null;
+//        Optional<Bill> optional = billRepository.findById(savedBill.getId());
+//
+//        if(optional.isEmpty()) return null;
+//
+//        Bill bill_ = optional.get();
+//        bill_.setBillDetails(billDetails);
+//        BillDetailDto billDetail = mapBillDetailDto(bill_);
 
-        Bill bill_ = optional.get();
+        emailUtils.sendInvoiceEmail(savedBill.getEmail(), CafeUtils.createPdf(billDetailDto));
 
-        BillDetailDto billDetail = mapBillDetailDto(bill_);
-
-        emailUtils.sendInvoiceEmail(savedBill.getEmail(), CafeUtils.createPdf(billDetail));
-
-        return new ResponseEntity<>("Create bill successfully! Please check your email for invoice", HttpStatus.OK);
+        return new ResponseEntity<>(billDetailDto, HttpStatus.OK);
     }
 
     @Override

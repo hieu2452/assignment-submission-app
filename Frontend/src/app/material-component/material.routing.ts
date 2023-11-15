@@ -13,31 +13,33 @@ export const MaterialRoutes: Routes = [
     {
         path:'product',
         component:ManageProductComponent,
-        
+        canActivate: [RouteGuardService],
         data:{
-            expectRole:['']
+            expectedRole:['manager']
         }
     },
     {
         path:'category',
         component:ManageCategoryComponent,
-        
+        canActivate: [RouteGuardService],
         data:{
-            expectRole:['manager']
+            expectedRole:['manager']
         },
     },
     {
         path:'bill',
         component:ViewBillComponent,
+        canActivate: [RouteGuardService],
         data:{
-            expectedRole: ['']
+            expectedRole: ['employee','manager']
         }
     },
     {
         path:'user',
         component:ManageUserComponent,
+        canActivate: [RouteGuardService],
         data:{
-            expectedRole: ['']
+            expectedRole: ['manager']
         }
     },
     {

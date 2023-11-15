@@ -3,6 +3,7 @@ package com.example.spring.CafeManagerApplication.dto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ public class BillDetailDto {
 
     private String name;
 
-    private LocalDateTime createdDate;
+    private LocalDateTime createdDate = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));;
 
     private String email;
 

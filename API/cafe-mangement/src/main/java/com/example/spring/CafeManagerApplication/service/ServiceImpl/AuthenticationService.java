@@ -91,18 +91,7 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         return new ResponseEntity<>(new AuthResponseDTO(token,refreshToken.getToken(), user.getUsername()),HttpStatus.OK);
     }
 
-    @Override
-    @Transactional
-    public ResponseEntity<?> enableUser(Long userId) {
-        Optional<UserEntity> optional = userRepository.findById(userId);
 
-        if(optional.isEmpty()) throw new UserNotFound("User not found");
-
-        UserEntity user = optional.get();
-        user.setActive(true);
-
-        return new ResponseEntity<>("Active account successfully",HttpStatus.NO_CONTENT);
-    }
 
     private Map<String, List<String>> mapRole(List<Role> roles){
         List<String> roleName = roles.stream().map(Role::getName).toList();
