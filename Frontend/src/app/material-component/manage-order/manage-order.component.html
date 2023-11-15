@@ -17,10 +17,17 @@
         <mat-card>
             <b><span>Manage Order</span></b>
 
-            <button class="btn-submit" mat-flat-button color="primary" class="float-right"
-                [disabled]="validateSubmit()" (click)="handleSubmit()">
+            <button class="btn-submit" mat-flat-button color="primary" class="float-right" [disabled]="validateSubmit()"
+                (click)="handleSubmit()">
                 <mat-icon>print</mat-icon>Submit & Bill
             </button>
+        </mat-card>
+        <hr>
+        <mat-card>
+            <mat-form-field appearance="standard">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+            </mat-form-field>
         </mat-card>
         <hr>
         <mat-card>

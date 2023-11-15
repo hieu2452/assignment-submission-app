@@ -110,6 +110,18 @@ export class ManageOrderComponent implements OnInit {
     // })
   }
 
+  applyFilter(event: any) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    console.log(filterValue)
+    this.products = this.products.filter((product: Product) => {
+      return product.name.toLowerCase().includes(filterValue.toLowerCase());
+    })
+
+    if(filterValue === '') {
+      this.getProducts();
+    }
+  }
+
   handleSubmit() {
     const formData = this.manageOrderForm.value;
     const data = {
@@ -117,7 +129,7 @@ export class ManageOrderComponent implements OnInit {
       email: formData.email,
       contactNumber: formData.contactNumber,
       paymentMethod: formData.paymentMethod,
-      products: formData.products.map(({ category, ...rest } : any) => rest)
+      products: formData.products.map(({ category, ...rest }: any) => rest)
     }
     this.billService.addBill(data).subscribe((response: any) => {
       this.snackbarService.openSnackBar("Create bill succesfully", 'success');
