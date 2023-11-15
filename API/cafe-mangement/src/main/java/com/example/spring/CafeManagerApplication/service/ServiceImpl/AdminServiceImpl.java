@@ -27,9 +27,9 @@ public class AdminServiceImpl implements AdminService {
         if(optional.isEmpty()) throw new UserNotFound("User not found");
 
         UserEntity user = optional.get();
-        user.setActive(true);
+        user.setActive(!user.getActive());
 
-        return new ResponseEntity<>("Active account successfully", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @Override
