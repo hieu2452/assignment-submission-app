@@ -5,7 +5,7 @@
 .product-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    // justify-content: center;
     align-items: center;
     width: 50%;
     background-color: white;
@@ -41,11 +41,11 @@ mat-card {
 }
 
 .product-card {
-    max-width: 200px;
+    max-width: 180px;
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
-    margin-left: 5px;
+    margin-left: 15px;
     margin-right: 5px;
 }
 

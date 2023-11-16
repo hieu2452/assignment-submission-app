@@ -87,7 +87,6 @@ export class ManageOrderComponent implements OnInit {
 
   validateSubmit() {
     var formData = this.manageOrderForm.value;
-    console.log(formData)
     if (formData.products === null || this.manageOrderForm.controls['email'].value === null ||
       formData.contactNumber === null || formData.paymentMethod === null) {
       return true;
@@ -113,9 +112,9 @@ export class ManageOrderComponent implements OnInit {
 
   applyFilter(event: any) {
     const filterValue = (event.target as HTMLInputElement).value;
-    console.log(filterValue)
     this.products = this.products.filter((product: Product) => {
-      return product.name.toLowerCase().includes(filterValue.toLowerCase());
+      let result = product.name.toLowerCase().includes(filterValue.toLowerCase()) || product.price.toString().includes(filterValue.toLowerCase());
+      return result;
     })
 
     if(filterValue === '') {
@@ -130,7 +129,7 @@ export class ManageOrderComponent implements OnInit {
       email: formData.email,
       contactNumber: formData.contactNumber,
       paymentMethod: formData.paymentMethod,
-      products: formData.products.map(({ category, ...rest }: any) => rest)
+      products: formData.products
     }
     this.billService.addBill(data).subscribe((response: any) => {
       this.snackbarService.openSnackBar("Create bill succesfully", 'success');

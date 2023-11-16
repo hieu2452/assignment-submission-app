@@ -4,13 +4,14 @@ import com.example.spring.CafeManagerApplication.Utils.CafeUtils;
 import com.example.spring.CafeManagerApplication.Utils.EmailUtils;
 import com.example.spring.CafeManagerApplication.dto.BillDetailDto;
 import com.example.spring.CafeManagerApplication.dto.ProductDto;
-import com.example.spring.CafeManagerApplication.dto.ProductIdDto;
+
 import com.example.spring.CafeManagerApplication.entity.*;
 import com.example.spring.CafeManagerApplication.repository.BillDetailRepository;
 import com.example.spring.CafeManagerApplication.repository.BillRepository;
 import com.example.spring.CafeManagerApplication.repository.ProductRepository;
 import com.example.spring.CafeManagerApplication.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -78,12 +79,12 @@ public class BillServiceImpl implements BillService {
 
         UserEntity user = getUserFromAuth();
 
-        List<Bill> bills = billRepository.findAll();
+        List<Bill> bills = billRepository.findAll(Sort.by(Sort.Direction.DESC,"createdDate"));
 
 
-        List<BillDetailDto> detailDtos = bills.stream().map(this::mapBillDetailDto).toList();
+        List<BillDetailDto> detailDos = bills.stream().map(this::mapBillDetailDto).toList();
 
-        return new ResponseEntity<>(detailDtos,HttpStatus.OK);
+        return new ResponseEntity<>(detailDos,HttpStatus.OK);
     }
 
     @Override

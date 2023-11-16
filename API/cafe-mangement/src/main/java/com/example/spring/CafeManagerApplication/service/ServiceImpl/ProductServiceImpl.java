@@ -83,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
 //        product.setStatus("available");
         product.setImageUrl(imageUrl);
 
-        Category category = categoryRepository.findByName(productDto.getCategory());
+        Category category = categoryRepository.findByName(productDto.getCategory().getName());
 
         product.setCategory(category);
 
@@ -95,7 +95,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
 
-        Category category = categoryRepository.findByName(productDto.getCategory());
+        Category category = categoryRepository.findByName(productDto.getCategory().getName());
 
         product.setCategory(category);
 

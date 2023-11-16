@@ -22,7 +22,7 @@ public class ProductDto {
 
     private Integer price;
 
-    private String category;
+    private Category category;
 
     public ProductDto(Integer quantity, String name, Integer price) {
         this.quantity = quantity;
