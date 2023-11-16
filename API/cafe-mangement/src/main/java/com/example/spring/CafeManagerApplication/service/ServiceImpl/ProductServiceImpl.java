@@ -80,10 +80,9 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
-//        product.setStatus("available");
         product.setImageUrl(imageUrl);
 
-        Category category = categoryRepository.findByName(productDto.getCategory().getName());
+        Category category = categoryRepository.findById(productDto.getCategory().getId()).get();
 
         product.setCategory(category);
 
@@ -95,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
 
-        Category category = categoryRepository.findByName(productDto.getCategory().getName());
+        Category category = categoryRepository.findById(productDto.getCategory().getId()).get();
 
         product.setCategory(category);
 
@@ -129,10 +128,8 @@ public class ProductServiceImpl implements ProductService {
             productMapper(productDto,product);
         } else {
             String url = fileUpload.uploadFile(file);
-            productMapper(productDto,product);
+            productMapper(productDto,url,product);
         }
-
-//        productRepository.save(product);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 

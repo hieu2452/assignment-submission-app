@@ -2,11 +2,11 @@
     <div class="product-list">
         <div class="product-card" (click)="addToCart(product)" *ngFor="let product of products">
             <mat-card>
-                <img mat-card-image src={{product.imageUrl}} alt="Photo of a Shiba Inu">
+                <img mat-card-image src={{product.imageUrl}} alt={{product.name}}>
                 <mat-card-content>
                     <strong>{{product.name}}</strong>
                     <hr>
-                    <strong>{{product.price}} vnd</strong>
+                    <strong>{{product.price | number}} VNĐ</strong>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -50,26 +50,13 @@
 
                         <mat-form-field apperence="standard" fxFlex>
                             <mat-label>Email</mat-label>
-                            <input matInput formControlName="email" required>
-                            <mat-error
-                                *ngIf="manageOrderForm.controls.email.touched && manageOrderForm.controls.email.invalid">
-                                <span *ngIf="manageOrderForm.controls.email.errors.required">This field is
-                                    mandatory.</span>
-                                <span *ngIf="manageOrderForm.controls.email.errors.pattern">This field is
-                                    invalid.</span>
-                            </mat-error>
+                            <input matInput formControlName="email">
                         </mat-form-field>
 
                         <mat-form-field apperence="standard" fxFlex>
                             <mat-label>Contact Number</mat-label>
-                            <input matInput formControlName="contactNumber" required>
-                            <mat-error
-                                *ngIf="manageOrderForm.controls.contactNumber.touched && manageOrderForm.controls.contactNumber.invalid">
-                                <span *ngIf="manageOrderForm.controls.contactNumber.errors.required">This field is
-                                    mandatory.</span>
-                                <span *ngIf="manageOrderForm.controls.contactNumber.errors.pattern">This field is
-                                    invalid.</span>
-                            </mat-error>
+                            <input matInput formControlName="contactNumber" >
+                            
                         </mat-form-field>
 
 
@@ -97,7 +84,7 @@
         <mat-card>
             <b><span>Total Amount: </span></b>
 
-            <strong>{{totalAmount}} VND</strong>
+            <strong>{{totalAmount | number}} VNĐ</strong>
         </mat-card>
         <hr>
         <div class="responsive_table">

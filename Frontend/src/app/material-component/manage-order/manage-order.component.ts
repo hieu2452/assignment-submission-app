@@ -4,12 +4,14 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { error } from 'console';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { Product } from 'src/app/model/product.model';
 import { BillService } from 'src/app/services/bill.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
+import { saveAs } from 'src/app/shared/save-file';
 
 
 @Component({
@@ -35,14 +37,15 @@ export class ManageOrderComponent implements OnInit {
     private billService: BillService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService,
-    private router: Router) { }
+    private router: Router,
+    private ngService: NgxUiLoaderService) { }
 
   ngOnInit(): void {
     this.getProducts();
     this.manageOrderForm = this.formBulider.group({
       name: [null, [Validators.required, Validators.pattern(GlobalConstants.nameRegex)]],
-      email: [null, [Validators.required, Validators.pattern(GlobalConstants.emailRegex)]],
-      contactNumber: [null, [Validators.required]],
+      email: [null, [Validators.pattern(GlobalConstants.emailRegex)]],
+      contactNumber: [null, []],
       paymentMethod: [null, [Validators.required]],
       products: [null, [Validators.required]],
     });
@@ -87,8 +90,7 @@ export class ManageOrderComponent implements OnInit {
 
   validateSubmit() {
     var formData = this.manageOrderForm.value;
-    if (formData.products === null || this.manageOrderForm.controls['email'].value === null ||
-      formData.contactNumber === null || formData.paymentMethod === null) {
+    if (formData.products === null || formData.paymentMethod === null) {
       return true;
     } else {
       return false;
@@ -99,6 +101,7 @@ export class ManageOrderComponent implements OnInit {
     this.addedProducts = this.addedProducts.filter(product => product.id !== element.id)
     this.totalAmount -= element.price * element.quantity;
     this.dataSource = new MatTableDataSource(this.addedProducts);
+    this.validateSubmit()
   }
 
   downloadFile(fileName: string) {
@@ -112,17 +115,18 @@ export class ManageOrderComponent implements OnInit {
 
   applyFilter(event: any) {
     const filterValue = (event.target as HTMLInputElement).value;
+    console.log(filterValue)
     this.products = this.products.filter((product: Product) => {
       let result = product.name.toLowerCase().includes(filterValue.toLowerCase()) || product.price.toString().includes(filterValue.toLowerCase());
       return result;
     })
-
-    if(filterValue === '') {
+    if (filterValue === '') {
       this.getProducts();
     }
   }
 
   handleSubmit() {
+    this.ngService.start();
     const formData = this.manageOrderForm.value;
     const data = {
       name: formData.name,
@@ -132,8 +136,15 @@ export class ManageOrderComponent implements OnInit {
       products: formData.products
     }
     this.billService.addBill(data).subscribe((response: any) => {
+      this.ngService.stop();
+      this.billService.getPdf(response.id).subscribe((response: any) => {
+        saveAs(response, 'invoice');
+      }, (error) => {
+        console.log(error)
+      })
       this.snackbarService.openSnackBar("Create bill succesfully", 'success');
     }, (error: any) => {
+      this.ngService.stop();
       console.log(error.error?.message);
       if (error.error?.message) {
         this.responseMessage = error.error?.message;

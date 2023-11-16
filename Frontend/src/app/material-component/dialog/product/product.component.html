@@ -11,7 +11,7 @@
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="productForm">
         <div fxFlex fxLayout="column">
-            <div *ngIf="action == 'Update'" fxLayout="row wrap">
+            <div *ngIf="action == 'Edit'" fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Id</mat-label>
                     <input matInput formControlName="id" required [readonly]="true">
@@ -39,7 +39,7 @@
 
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Category</mat-label>
-                    <mat-select formControlName="category">
+                    <mat-select formControlName="category" [(ngModel)]="dialogData.data.category">
                         <mat-option *ngFor="let category of categorys"
                             [value]="category">{{category.name}}</mat-option>
                     </mat-select>
@@ -78,7 +78,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()"
-        [disabled]="!(productForm.valid && productForm.dirty)">
+        [disabled]="validateForm()">
         <mat-icon>save</mat-icon> {{action}}
     </button>
     <button mat-raised-button color="warn" mat-dialog-close>

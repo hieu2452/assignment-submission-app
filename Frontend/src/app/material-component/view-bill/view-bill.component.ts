@@ -8,7 +8,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { GlobalConstants } from 'src/app/shared/global-constants';
 import { ViewBillProductsComponent } from '../dialog/view-bill-products/view-bill-products.component';
 import { ConfirmationComponent } from '../dialog/confirmation/confirmation.component';
-// import { saveAs } from 'file-saver';
+import { error } from 'console';
+import { saveAs } from 'src/app/shared/save-file';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+
 
 @Component({
   selector: 'app-view-bill',
@@ -24,7 +27,8 @@ export class ViewBillComponent implements OnInit {
   constructor(private billservice: BillService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService,
-    private router: Router) { }
+    private router: Router,
+    private ngService: NgxUiLoaderService) { }
 
   ngOnInit(): void {
     this.tableData();
@@ -76,30 +80,18 @@ export class ViewBillComponent implements OnInit {
   deleteBill(id: any) {
     this.billservice.delete(id).subscribe((response: any) => {
       this.tableData();
-      this.responseMessage = response?.message;
-      this.snackbarService.openSnackBar(this.responseMessage, "success");
+      this.snackbarService.openSnackBar("Delete bill successfully", 'success');
     }, (error: any) => {
-      console.log(error.error?.message);
-      if (error.error?.message) {
-        this.responseMessage = error.error?.message;
-      } else {
-        this.responseMessage = GlobalConstants.genericError;
-      }
-      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+
     })
   }
 
   downloadReportAction(values: any) {
-    var data = {
-      name: values.name,
-      email: values.email,
-      uuid: values.uuid,
-      contactNumber: values.contactNumber,
-      paymentMethod: values.paymentMethod,
-      totalAmount: values.total.toString(),
-      productDetails: values.productDetails
-    }
-    this.downloadFile(values.uuid, data);
+    this.billservice.getPdf(values.id).subscribe((response: any) => {
+      saveAs(response, 'invoice');
+    }, (error) => {
+      console.log(error)
+    })
   }
 
   downloadFile(fileName: string, data: any) {

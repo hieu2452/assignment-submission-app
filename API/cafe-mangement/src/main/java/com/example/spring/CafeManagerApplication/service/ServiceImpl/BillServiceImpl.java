@@ -3,6 +3,7 @@ package com.example.spring.CafeManagerApplication.service.ServiceImpl;
 import com.example.spring.CafeManagerApplication.Utils.CafeUtils;
 import com.example.spring.CafeManagerApplication.Utils.EmailUtils;
 import com.example.spring.CafeManagerApplication.dto.BillDetailDto;
+import com.example.spring.CafeManagerApplication.dto.MessageResponse;
 import com.example.spring.CafeManagerApplication.dto.ProductDto;
 
 import com.example.spring.CafeManagerApplication.entity.*;
@@ -61,15 +62,7 @@ public class BillServiceImpl implements BillService {
             billDetailRepository.save(billDetail);
         }
 
-//        Optional<Bill> optional = billRepository.findById(savedBill.getId());
-//
-//        if(optional.isEmpty()) return null;
-//
-//        Bill bill_ = optional.get();
-//        bill_.setBillDetails(billDetails);
-//        BillDetailDto billDetail = mapBillDetailDto(bill_);
-
-        emailUtils.sendInvoiceEmail(savedBill.getEmail(), CafeUtils.createPdf(billDetailDto));
+//        emailUtils.sendInvoiceEmail(savedBill.getEmail(), CafeUtils.createPdf(billDetailDto));
 
         return new ResponseEntity<>(billDetailDto, HttpStatus.OK);
     }
@@ -84,20 +77,37 @@ public class BillServiceImpl implements BillService {
 
         List<BillDetailDto> detailDos = bills.stream().map(this::mapBillDetailDto).toList();
 
+        if(detailDos.isEmpty()) return new ResponseEntity<>(new MessageResponse("No data"), HttpStatus.NOT_FOUND);
+
         return new ResponseEntity<>(detailDos,HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<?> getBillById(Integer id) {
         Optional<Bill> optional = billRepository.findById(id);
-        if(optional.isEmpty()) return new ResponseEntity<>("Bill not found", HttpStatus.NOT_FOUND);
+        if(optional.isEmpty()) return new ResponseEntity<>(new MessageResponse("Bill not found"), HttpStatus.NOT_FOUND);
 
         Bill bill = optional.get();
 
         BillDetailDto billDetailDto = mapBillDetailDto(bill);
 
+        byte[] byteArray =CafeUtils.createPdf(billDetailDto);
 
-        return new ResponseEntity<>(billDetailDto,HttpStatus.OK);
+        return new ResponseEntity<>(byteArray,HttpStatus.OK);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> deleteBill(Integer id) {
+
+        Optional<Bill> optional = billRepository.findById(id);
+
+        if(optional.isEmpty()) return new ResponseEntity<>(new MessageResponse("Bill not found"),HttpStatus.BAD_REQUEST);
+
+        Bill bill = optional.get();
+
+        billRepository.delete(bill);
+        return new ResponseEntity<>(new MessageResponse("delete successfully"),HttpStatus.NO_CONTENT);
     }
 
     private BillDetailDto mapBillDetailDto(Bill bill){

@@ -67,6 +67,7 @@ export class ManageProductComponent implements OnInit {
   }
 
   handleEditAction(values: any) {
+    console.log(values)
     const dialogConfog = new MatDialogConfig();
     dialogConfog.data = {
       action: 'Edit',
