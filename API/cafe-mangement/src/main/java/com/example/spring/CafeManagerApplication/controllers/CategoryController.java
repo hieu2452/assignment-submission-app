@@ -29,4 +29,10 @@ public class CategoryController {
         return categoryService.enableCate(id);
     }
 
+
+    @PostMapping("update")
+    public ResponseEntity<?> updateCategory(@RequestBody Map<String,String> requestMap){
+        return categoryService.updateCategory(requestMap);
+    }
+
 }

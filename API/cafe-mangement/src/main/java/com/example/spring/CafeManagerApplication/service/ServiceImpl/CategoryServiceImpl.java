@@ -19,8 +19,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private CategoryRepository categoryRepository;
-//    @Autowired
-//    JWTAuthenticationFilter jwtFilter;
     @Override
     @Transactional
     public ResponseEntity<?> addNewCategory(Map<String, String> requestMap) {
@@ -56,8 +54,27 @@ public class CategoryServiceImpl implements CategoryService {
             category.setEnable("false");
         else category.setEnable("true");
 
-        return new ResponseEntity<>("",HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new MessageResponse(""),HttpStatus.NO_CONTENT);
     }
+
+    @Override
+    @Transactional
+    public ResponseEntity<?> updateCategory(Map<String, String> requestMap) {
+        if(!validateCategoryMap(requestMap))
+            return new ResponseEntity<>(new MessageResponse("You have submitted wrong format, pleas try again"), HttpStatus.BAD_REQUEST);
+        int category_id = Integer.parseInt(requestMap.get("id"));
+
+        Optional<Category> optional = categoryRepository.findById(category_id);
+
+        if(optional.isEmpty()) return new ResponseEntity<>("", HttpStatus.NOT_FOUND);
+
+        Category category = optional.get();
+
+        category.setName(requestMap.get("name"));
+
+        return new ResponseEntity<>(new MessageResponse("Update category successfully"),HttpStatus.NO_CONTENT);
+    }
+
 
     private boolean validateCategoryMap(Map<String, String> requestMap) {
         return requestMap.containsKey("name");

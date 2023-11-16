@@ -10,4 +10,6 @@ public interface CategoryService {
 
     ResponseEntity<?> getAllCategories();
     ResponseEntity<?> enableCate(Integer id);
+
+    ResponseEntity<?> updateCategory(Map<String, String> requestMap);
 }
