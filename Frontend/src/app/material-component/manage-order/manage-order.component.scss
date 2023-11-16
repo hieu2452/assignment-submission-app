@@ -36,6 +36,10 @@ mat-card {
     padding-bottom: 30px !important;
 }
 
+mat-card:hover {
+    cursor: pointer;
+}
+
 .btn-submit {
     margin-left: 14px;
 }
