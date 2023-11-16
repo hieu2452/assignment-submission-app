@@ -39,7 +39,7 @@
 
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Category</mat-label>
-                    <mat-select formControlName="category" [(ngModel)]="dialogData.data.category">
+                    <mat-select formControlName="category">
                         <mat-option *ngFor="let category of categorys"
                             [value]="category">{{category.name}}</mat-option>
                     </mat-select>
@@ -49,12 +49,7 @@
             <div fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Description</mat-label>
-                    <input matInput formControlName="description" required>
-                    <mat-error
-                        *ngIf="productForm.controls.description.touched && productForm.controls.description.invalid">
-                        <span *ngIf="productForm.controls.description.errors.required">This field is mandatory.</span>
-                        <span *ngIf="productForm.controls.description.errors.pattern">This field is invalid.</span>
-                    </mat-error>
+                    <input matInput formControlName="description">
                 </mat-form-field>
             </div>
 

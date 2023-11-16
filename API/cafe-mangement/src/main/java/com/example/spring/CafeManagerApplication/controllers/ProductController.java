@@ -59,4 +59,9 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(@PathVariable Integer id) throws IOException {
         return productService.updateProductStatus(id);
     }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable Integer id) throws IOException {
+        return productService.deleteProduct(id);
+    }
 }

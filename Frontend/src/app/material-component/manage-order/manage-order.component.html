@@ -28,6 +28,28 @@
                 <mat-label>Filter</mat-label>
                 <input matInput (keyup)="applyFilter($event)" #input>
             </mat-form-field>
+            <form [formGroup]="productQueryParam">
+                <mat-form-field appearance="standard" fxFlex>
+                    <mat-label>Sort</mat-label>
+                    <mat-select formControlName="price">
+                        <mat-option [value]="''">All</mat-option>
+                        <mat-option [value]="'cheapest'">Price ( Low - High )</mat-option>
+                        <mat-option [value]="'expensive'">Price ( High - Low )</mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="standard" fxFlex>
+                    <mat-label>Category</mat-label>
+                    <mat-select formControlName="category">
+                        <mat-option [value]="''">All</mat-option>
+                        <mat-option *ngFor="let category of categorys" [value]="category.name">{{category.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button class="btn-apply" mat-flat-button color="primary" class="float-right" (click)="applyProductFilter()">
+                    Apply Filter
+                </button>
+            </form>
+
         </mat-card>
         <hr>
         <mat-card>
@@ -55,8 +77,8 @@
 
                         <mat-form-field apperence="standard" fxFlex>
                             <mat-label>Contact Number</mat-label>
-                            <input matInput formControlName="contactNumber" >
-                            
+                            <input matInput formControlName="contactNumber">
+
                         </mat-form-field>
 
 

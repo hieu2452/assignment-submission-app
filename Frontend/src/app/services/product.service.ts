@@ -1,8 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Product } from '../model/product.model';
 import { Observable } from 'rxjs';
+import { ProductParam } from '../model/product-params';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -24,8 +26,16 @@ export class ProductService {
     return this.httpClient.get<Product[]>(`${this.url}/product/admin/get`);
   }
 
-  getProducts() {
-    return this.httpClient.get<Product[]>(`${this.url}/product/get`);
+  getProducts(productParam: ProductParam) {
+    let params = new HttpParams();
+    params = params.append('category', productParam.category);
+    params = params.append('price', productParam.price);
+    return this.httpClient.get<any>(`${this.url}/product/get`, { observe: 'response', params }).pipe(
+      map(response => {
+        if (response.body)
+          return response.body
+      })
+    );
   }
 
   getProductsById(id: any) {
@@ -44,7 +54,7 @@ export class ProductService {
 
 
   delete(id: any) {
-    return this.httpClient.delete(`${this.url}/update-status/${id}`, {
+    return this.httpClient.delete(`${this.url}/product/delete/${id}`, {
       headers: new HttpHeaders().set('Content-Type', "application/json")
     })
   }
@@ -53,7 +63,7 @@ export class ProductService {
   //   return this.httpClient.get(this.url + "/product/getByCategory/"+id);
   // }
 
-  getById(id:any){
-    return this.httpClient.get(this.url + "/product/getProductById/"+id);
+  getById(id: any) {
+    return this.httpClient.get(this.url + "/product/getProductById/" + id);
   }
 }

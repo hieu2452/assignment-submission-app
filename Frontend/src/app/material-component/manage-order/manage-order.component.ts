@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { error } from 'console';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ProductParam } from 'src/app/model/product-params';
 import { Product } from 'src/app/model/product.model';
 import { BillService } from 'src/app/services/bill.service';
 import { CategoryService } from 'src/app/services/category.service';
@@ -29,6 +30,8 @@ export class ManageOrderComponent implements OnInit {
   totalAmount: number = 0;
   responseMessage: any;
   addedProducts: Product[] = [];
+  productQueryParam: any = FormGroup;
+  productParams = new ProductParam();
 
   constructor(
     private formBulider: FormBuilder,
@@ -41,7 +44,7 @@ export class ManageOrderComponent implements OnInit {
     private ngService: NgxUiLoaderService) { }
 
   ngOnInit(): void {
-    this.getProducts();
+    this.getProducts(this.productParams);
     this.manageOrderForm = this.formBulider.group({
       name: [null, [Validators.required, Validators.pattern(GlobalConstants.nameRegex)]],
       email: [null, [Validators.pattern(GlobalConstants.emailRegex)]],
@@ -49,10 +52,40 @@ export class ManageOrderComponent implements OnInit {
       paymentMethod: [null, [Validators.required]],
       products: [null, [Validators.required]],
     });
+
+    this.getCategorys()
+
+    this.productQueryParam = this.formBulider.group({
+      category: [null],
+      price: [null],
+    });
+    this.productQueryParam.controls['category'].setValue('')
+    this.productQueryParam.controls['price'].setValue('')
   }
 
-  getProducts() {
-    this.productService.getProducts().subscribe((response: Product[]) => {
+  getCategorys() {
+    this.categoryService.getCategorys().subscribe((response: any) => {
+      this.categorys = response;
+    }, (error) => {
+      console.error(error);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
+  }
+
+  applyProductFilter(): void {
+    let data = this.productQueryParam.value;
+    this.productParams.category = data.category;
+    this.productParams.price = data.price;
+    this.getProducts(this.productParams)
+  }
+
+  getProducts(productParam: ProductParam) {
+    this.productService.getProducts(productParam).subscribe((response: Product[]) => {
       this.products = response
 
     }, (error: any) => {
@@ -121,7 +154,7 @@ export class ManageOrderComponent implements OnInit {
       return result;
     })
     if (filterValue === '') {
-      this.getProducts();
+      this.getProducts(this.productParams);
     }
   }
 
@@ -153,5 +186,9 @@ export class ManageOrderComponent implements OnInit {
       }
       this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     })
+    this.totalAmount = 0;
+    this.addedProducts = [];
+    this.dataSource = new MatTableDataSource<Product>(this.addedProducts);
   }
+
 }

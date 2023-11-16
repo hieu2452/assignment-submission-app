@@ -152,6 +152,17 @@ public class ProductServiceImpl implements ProductService {
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<?> deleteProduct(Integer id) {
+        Optional<Product> optional = productRepository.findById(id);
+
+        if(optional.isEmpty()) throw new ProductNotFoundException("Product not found");
+
+        productRepository.delete(optional.get());
+
+        return new ResponseEntity<>("Delete product successfully", HttpStatus.NO_CONTENT);
+    }
+
 
 //    private Product productMapper(ProductDto productDto){
 //        Product product = new Product();
