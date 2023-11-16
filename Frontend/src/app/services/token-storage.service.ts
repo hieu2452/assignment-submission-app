@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { UserService } from "./user.service";
 import { take } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 const ACCESS_TOKEN = 'accessToken';
 const REFRESH_TOKEN = 'refreshToken';
@@ -11,27 +12,22 @@ const USER = 'user';
 })
 export class TokenStorageService {
 
-    constructor(private userService: UserService) { }
+    constructor(private userService: UserService, private router: Router) { }
 
     signOut(): void {
-        localStorage.clear(); 
+        localStorage.clear();
+        this.router.navigate(['/']);
     }
 
     public saveToken(token: string): void {
         localStorage.removeItem(ACCESS_TOKEN);
         localStorage.setItem(ACCESS_TOKEN, token);
 
-        // this.userService.currentUser$.pipe(take(1)).subscribe({
-        //     next: response => {
-        //         const user = response;
-        //         if (user) {
-        //             if (user.username) {
-        //                 this.saveUser({ ...user, accessToken: token });
-        //             }
-        //         }
-        //     }
-        // })
-        
+        const user = this.getUser();
+        console.log(user)
+        if (user) {
+            this.saveUser({ ...user, accessToken: token });
+        }
     }
 
     public getToken(): string | null {
@@ -53,17 +49,12 @@ export class TokenStorageService {
     }
 
     public getUser(): any {
-        
-        this.userService.currentUser$.pipe(take(1)).subscribe({
-            next: response => {
-                const user = response;
-                if (user) {
-                    // console.log(user)
-                    return user
-                }
-                return {};
-            }
-        })
-       
+        const user = localStorage.getItem(USER);
+        if (user) {
+            return JSON.parse(user);
+        }
+
+        return {};
+
     }
 }

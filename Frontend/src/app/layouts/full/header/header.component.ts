@@ -11,7 +11,7 @@ import { ConfirmationComponent } from 'src/app/material-component/dialog/confirm
 })
 export class AppHeaderComponent {
   role:any;
-  constructor(private router:Router, private dialog:MatDialog) {
+  constructor(private router:Router, private dialog:MatDialog ) {
   }
 
   logout(){
