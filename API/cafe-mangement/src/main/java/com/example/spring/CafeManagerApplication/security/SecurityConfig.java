@@ -62,7 +62,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->
                                 req.requestMatchers("/auth/**").permitAll()
                                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                                        .requestMatchers(ADMIN_AUTHORIZE_API).hasAuthority("manager")
+                                        .requestMatchers(ADMIN_AUTHORIZE_API).hasAuthority("admin")
                                         .requestMatchers("/api/test/**").permitAll()
                                         .anyRequest()
                                         .authenticated()

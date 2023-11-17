@@ -63,7 +63,7 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
         user.setEmail(registerDto.getEmail());
         user.setContactNumber(registerDto.getContactNumber());
 
-        Role role = roleRepository.findByName("employee").orElseThrow();
+        Role role = roleRepository.findByName("user").orElseThrow();
         user.setRoles(Collections.singletonList(role));
 
         userRepository.save(user);

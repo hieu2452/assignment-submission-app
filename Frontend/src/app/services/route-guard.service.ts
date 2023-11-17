@@ -31,7 +31,7 @@ export class RouteGuardService {
       this.router.navigate(['/']);
     }
 
-    if (!tokenPayload.role.includes('manager') && !tokenPayload.role.includes('employee')) {
+    if (!tokenPayload.role.includes('admin') && !tokenPayload.role.includes('user')) {
       this.router.navigate(['/']);
       localStorage.clear();
       return false;
@@ -49,28 +49,6 @@ export class RouteGuardService {
       this.router.navigate(['/cafe/dashboard']);
       return false;
     }
-
-
-    // console.log(tokenPayload)
-    // console.log(expectedRole)
-
-    // for (let token of tokenPayload.role) {
-    //   if (token == 'manager' || token == 'employee') {
-    //     if (this.auth.isAuthenticated() && expectedRole.includes(token)) {
-    //       isAuthorized = true;
-    //       console.log(isAuthorized)
-    //       // return true;
-    //     }
-    //     // this.snackbarService.openSnackBar(GlobalConstants.unauthroized, GlobalConstants.error);
-    //     // this.router.navigate(['/cafe/dashboard']);
-    //     // return false;
-    //   }
-    //   else {
-    //     this.router.navigate(['/']);
-    //     localStorage.clear();
-    //     return false;
-    //   }
-    // }
 
     return isAuthorized;
   }

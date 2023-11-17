@@ -61,9 +61,9 @@ export class SignupComponent implements OnInit {
     this.userService.signup(data).subscribe((response: any) => {
       console.log(response)
       this.ngxService.stop();
-      this.dialogRef.close();
       this.responseMessage = response?.message;
       this.snackbarService.openSnackBar(this.responseMessage, "success");
+      this.dialogRef.close();
       this.router.navigate(['/']);
     }, (error) => {
       this.ngxService.stop();
