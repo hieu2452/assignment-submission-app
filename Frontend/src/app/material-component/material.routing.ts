@@ -46,7 +46,7 @@ export const MaterialRoutes: Routes = [
         path:'order',
         component:ManageOrderComponent,
         data:{
-            expectedRole: ['']
+            expectedRole: ['employee','manager']
         }
     },
 ];
