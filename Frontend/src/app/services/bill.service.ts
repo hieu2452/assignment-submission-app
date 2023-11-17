@@ -23,15 +23,15 @@ export class BillService {
     })
   }
 
-  getPdf(data: any): Observable<Blob> {
-    return this.httpClient.post(this.url + "/bill/getPdf", data, { responseType: 'blob' });
+  getPdf(id: any): Observable<Blob> {
+    return this.httpClient.get(this.url + "/bill/get/" + id, { responseType: 'blob' });
   }
 
   getBills() {
     return this.httpClient.get(this.url + "/bill/get");
   }
   delete(id: any) {
-    return this.httpClient.post(this.url + "/bill/delete/" + id, {
+    return this.httpClient.delete(this.url + "/bill/delete/" + id, {
       headers: new HttpHeaders().set('Content-Type', "application/json")
     });
   }

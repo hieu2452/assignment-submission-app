@@ -45,10 +45,7 @@ export class LoginComponent implements OnInit {
 
     this.userService.login(data).subscribe((response: any) => {
       this.ngxService.stop();
-
-      this.dialogRef.close();
-      console.log(response)
-      // localStorage.setItem('accessToken', response.accessToken);
+      this.dialogRef.close();  
       this.tokenStorage.saveToken(response.accessToken)
       this.tokenStorage.saveRefreshToken(response.refreshToken);
       this.tokenStorage.saveUser(response);

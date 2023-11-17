@@ -33,7 +33,6 @@ export class FullComponent implements OnDestroy, AfterViewInit {
   setCurrentUser() {
     const userSring = localStorage.getItem('user');
     if (!userSring) return;
-
     const user = JSON.parse(userSring);
     this.userService.setCurrentUser(user);
   }

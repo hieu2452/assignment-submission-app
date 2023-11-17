@@ -56,7 +56,6 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, multi: true, useClass: ErrorInterceptor },
     { provide: HTTP_INTERCEPTORS, multi: true, useClass: AuthInterceptor }],
   bootstrap: [AppComponent]
 })

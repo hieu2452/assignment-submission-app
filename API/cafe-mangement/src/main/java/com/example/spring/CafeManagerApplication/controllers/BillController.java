@@ -26,4 +26,10 @@ public class BillController {
     public ResponseEntity<?> getBillById(@PathVariable Integer id) {
         return billService.getBillById(id);
     }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteBill(@PathVariable Integer id) {
+        return billService.deleteBill(id);
+    }
+
 }

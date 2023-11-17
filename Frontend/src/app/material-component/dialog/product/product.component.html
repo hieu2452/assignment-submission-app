@@ -11,7 +11,7 @@
 <mat-dialog-content class="mat-typography">
     <form [formGroup]="productForm">
         <div fxFlex fxLayout="column">
-            <div *ngIf="action == 'Update'" fxLayout="row wrap">
+            <div *ngIf="action == 'Edit'" fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Id</mat-label>
                     <input matInput formControlName="id" required [readonly]="true">
@@ -49,12 +49,7 @@
             <div fxLayout="row wrap">
                 <mat-form-field appearance="standard" fxFlex>
                     <mat-label>Description</mat-label>
-                    <input matInput formControlName="description" required>
-                    <mat-error
-                        *ngIf="productForm.controls.description.touched && productForm.controls.description.invalid">
-                        <span *ngIf="productForm.controls.description.errors.required">This field is mandatory.</span>
-                        <span *ngIf="productForm.controls.description.errors.pattern">This field is invalid.</span>
-                    </mat-error>
+                    <input matInput formControlName="description">
                 </mat-form-field>
             </div>
 
@@ -78,7 +73,7 @@
 
 <mat-dialog-actions align="end">
     <button mat-raised-button color="primary" type="submit" (click)="handleSubmit()"
-        [disabled]="!(productForm.valid && productForm.dirty)">
+        [disabled]="validateForm()">
         <mat-icon>save</mat-icon> {{action}}
     </button>
     <button mat-raised-button color="warn" mat-dialog-close>

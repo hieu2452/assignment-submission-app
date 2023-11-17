@@ -16,14 +16,7 @@ export class HomeComponent implements OnInit {
   user = {};
 
   constructor(private dialog: MatDialog, private router: Router, private userSerivce: UserService) {
-    this.userSerivce.currentUser$.pipe(take(1)).subscribe({
-      next: currentUser => {
-        if (currentUser) {
-          this.user = currentUser
-          console.log(currentUser)
-        }
-      }
-    })
+
 
   }
 
@@ -43,18 +36,13 @@ export class HomeComponent implements OnInit {
     this.dialog.open(LoginComponent, dialogConfig)
   }
 
-  // checkLogin() {
-  //   if (!this.user) return;
 
-  //   this.router.navigate(['/cafe/dashboard']);
-  // }
 
   checkLogin() {
     const userSring = localStorage.getItem('user');
     if (!userSring) return;
     this.router.navigate(['/cafe/dashboard']);
     const user = JSON.parse(userSring);
-    console.log(user)
     this.userSerivce.setCurrentUser(user);
     
   }

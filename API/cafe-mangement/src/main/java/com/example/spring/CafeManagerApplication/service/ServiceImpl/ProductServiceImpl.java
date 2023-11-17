@@ -80,10 +80,9 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
-//        product.setStatus("available");
         product.setImageUrl(imageUrl);
 
-        Category category = categoryRepository.findByName(productDto.getCategory().getName());
+        Category category = categoryRepository.findById(productDto.getCategory().getId()).get();
 
         product.setCategory(category);
 
@@ -95,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(productDto.getPrice());
         product.setDescription(productDto.getDescription());
 
-        Category category = categoryRepository.findByName(productDto.getCategory().getName());
+        Category category = categoryRepository.findById(productDto.getCategory().getId()).get();
 
         product.setCategory(category);
 
@@ -129,10 +128,8 @@ public class ProductServiceImpl implements ProductService {
             productMapper(productDto,product);
         } else {
             String url = fileUpload.uploadFile(file);
-            productMapper(productDto,product);
+            productMapper(productDto,url,product);
         }
-
-//        productRepository.save(product);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
@@ -153,6 +150,17 @@ public class ProductServiceImpl implements ProductService {
         if(products.isEmpty()) throw new ProductNotFoundException("Products not found");
 
         return new ResponseEntity<>(products,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteProduct(Integer id) {
+        Optional<Product> optional = productRepository.findById(id);
+
+        if(optional.isEmpty()) throw new ProductNotFoundException("Product not found");
+
+        productRepository.delete(optional.get());
+
+        return new ResponseEntity<>("Delete product successfully", HttpStatus.NO_CONTENT);
     }
 
 

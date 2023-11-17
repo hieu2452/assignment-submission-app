@@ -4,12 +4,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { error } from 'console';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { ProductParam } from 'src/app/model/product-params';
 import { Product } from 'src/app/model/product.model';
 import { BillService } from 'src/app/services/bill.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
+import { saveAs } from 'src/app/shared/save-file';
 
 
 @Component({
@@ -27,6 +30,8 @@ export class ManageOrderComponent implements OnInit {
   totalAmount: number = 0;
   responseMessage: any;
   addedProducts: Product[] = [];
+  productQueryParam: any = FormGroup;
+  productParams = new ProductParam();
 
   constructor(
     private formBulider: FormBuilder,
@@ -35,21 +40,52 @@ export class ManageOrderComponent implements OnInit {
     private billService: BillService,
     private dialog: MatDialog,
     private snackbarService: SnackbarService,
-    private router: Router) { }
+    private router: Router,
+    private ngService: NgxUiLoaderService) { }
 
   ngOnInit(): void {
-    this.getProducts();
+    this.getProducts(this.productParams);
     this.manageOrderForm = this.formBulider.group({
       name: [null, [Validators.required, Validators.pattern(GlobalConstants.nameRegex)]],
-      email: [null, [Validators.required, Validators.pattern(GlobalConstants.emailRegex)]],
-      contactNumber: [null, [Validators.required]],
+      email: [null, [Validators.pattern(GlobalConstants.emailRegex)]],
+      contactNumber: [null, []],
       paymentMethod: [null, [Validators.required]],
       products: [null, [Validators.required]],
     });
+
+    this.getCategorys()
+
+    this.productQueryParam = this.formBulider.group({
+      category: [null],
+      price: [null],
+    });
+    this.productQueryParam.controls['category'].setValue('')
+    this.productQueryParam.controls['price'].setValue('')
   }
 
-  getProducts() {
-    this.productService.getProducts().subscribe((response: Product[]) => {
+  getCategorys() {
+    this.categoryService.getCategorys().subscribe((response: any) => {
+      this.categorys = response;
+    }, (error) => {
+      console.error(error);
+      if (error.error?.message) {
+        this.responseMessage = error.error?.message;
+      } else {
+        this.responseMessage = GlobalConstants.genericError;
+      }
+      this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
+    });
+  }
+
+  applyProductFilter(): void {
+    let data = this.productQueryParam.value;
+    this.productParams.category = data.category;
+    this.productParams.price = data.price;
+    this.getProducts(this.productParams)
+  }
+
+  getProducts(productParam: ProductParam) {
+    this.productService.getProducts(productParam).subscribe((response: Product[]) => {
       this.products = response
 
     }, (error: any) => {
@@ -87,8 +123,7 @@ export class ManageOrderComponent implements OnInit {
 
   validateSubmit() {
     var formData = this.manageOrderForm.value;
-    if (formData.products === null || this.manageOrderForm.controls['email'].value === null ||
-      formData.contactNumber === null || formData.paymentMethod === null) {
+    if (formData.products === null || formData.paymentMethod === null) {
       return true;
     } else {
       return false;
@@ -99,6 +134,7 @@ export class ManageOrderComponent implements OnInit {
     this.addedProducts = this.addedProducts.filter(product => product.id !== element.id)
     this.totalAmount -= element.price * element.quantity;
     this.dataSource = new MatTableDataSource(this.addedProducts);
+    this.validateSubmit()
   }
 
   downloadFile(fileName: string) {
@@ -112,17 +148,18 @@ export class ManageOrderComponent implements OnInit {
 
   applyFilter(event: any) {
     const filterValue = (event.target as HTMLInputElement).value;
+    console.log(filterValue)
     this.products = this.products.filter((product: Product) => {
       let result = product.name.toLowerCase().includes(filterValue.toLowerCase()) || product.price.toString().includes(filterValue.toLowerCase());
       return result;
     })
-
-    if(filterValue === '') {
-      this.getProducts();
+    if (filterValue === '') {
+      this.getProducts(this.productParams);
     }
   }
 
   handleSubmit() {
+    this.ngService.start();
     const formData = this.manageOrderForm.value;
     const data = {
       name: formData.name,
@@ -132,8 +169,15 @@ export class ManageOrderComponent implements OnInit {
       products: formData.products
     }
     this.billService.addBill(data).subscribe((response: any) => {
+      this.ngService.stop();
+      this.billService.getPdf(response.id).subscribe((response: any) => {
+        saveAs(response, 'invoice');
+      }, (error) => {
+        console.log(error)
+      })
       this.snackbarService.openSnackBar("Create bill succesfully", 'success');
     }, (error: any) => {
+      this.ngService.stop();
       console.log(error.error?.message);
       if (error.error?.message) {
         this.responseMessage = error.error?.message;
@@ -142,5 +186,9 @@ export class ManageOrderComponent implements OnInit {
       }
       this.snackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     })
+    this.totalAmount = 0;
+    this.addedProducts = [];
+    this.dataSource = new MatTableDataSource<Product>(this.addedProducts);
   }
+
 }

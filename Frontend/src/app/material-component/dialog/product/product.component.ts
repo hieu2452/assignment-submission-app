@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CategoryService } from 'src/app/services/category.service';
 import { ProductService } from 'src/app/services/product.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
@@ -16,6 +17,7 @@ export class ProductComponent implements OnInit {
   onAddProduct = new EventEmitter();
   onEditProduct = new EventEmitter();
   productForm: any = FormGroup;
+
   dialogAction: any = "Add";
   action: any = "Add";
   responseMessage: any;
@@ -25,6 +27,7 @@ export class ProductComponent implements OnInit {
   file_list: Array<string> = [];
   selectedFile: any = undefined;
   data = {};
+  selected : any;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public dialogData: any,
@@ -33,6 +36,7 @@ export class ProductComponent implements OnInit {
     public dialogRef: MatDialogRef<ProductComponent>,
     private snackbarService: SnackbarService,
     private categoryService: CategoryService,
+    private ngxService: NgxUiLoaderService
   ) { }
 
   ngOnInit(): void {
@@ -41,14 +45,19 @@ export class ProductComponent implements OnInit {
       name: [null, [Validators.required, Validators.pattern(GlobalConstants.nameRegex)]],
       category: [null, Validators.required],
       price: [null, Validators.required],
-      description: [null, Validators.required],
+      description: [null],
     });
     if (this.dialogData.action === 'Edit') {
       this.dialogAction = "Edit";
-      this.action = "Update";
+      this.action = "Edit";
       this.productForm.patchValue(this.dialogData.data);
-      this.productForm.controls.category.setValue(this.dialogData.data.category.name)
+      // console.log(this.dialogData.data.category)
+      this.selected = this.dialogData.data.category;
+      this.productForm.controls['category'].setValue(this.dialogData.data.category)
     }
+
+   
+
     this.getCategorys();
   }
 
@@ -84,6 +93,21 @@ export class ProductComponent implements OnInit {
     }
   }
 
+  validateForm() {
+    if (this.action == "Add") {
+      if (!(this.productForm.valid && this.productForm.dirty && this.display.valid)) {
+        return true
+      }
+    }
+    if (this.action == "Edit") {
+      if (!(this.productForm.valid)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
 
   handleSubmit() {
     if (this.dialogAction === "Edit") {
@@ -108,14 +132,16 @@ export class ProductComponent implements OnInit {
     form_Data.append('model', JSON
       .stringify(data));
 
+    this.ngxService.start()
 
     this.productService.add(form_Data).subscribe((response: any) => {
       this.dialogRef.close();
+      this.ngxService.stop();
       this.onAddProduct.emit();
-      this.snackbarService.openSnackBar("Successfully Add Product", "success");
+      this.snackbarService.openSnackBar("Add Product Successfully", "success");
     }, (error) => {
       this.dialogRef.close();
-      console.error(error);
+      this.ngxService.stop();
       if (error.error?.message) {
         this.responseMessage = error.error?.message;
       } else {
@@ -127,9 +153,10 @@ export class ProductComponent implements OnInit {
   }
 
   edit() {
+    this.ngxService.start()
     const form_Data: FormData = new FormData();
-
     var formData = this.productForm.value;
+    console.log(this.dialogData.data);
     var data = {
       id: this.dialogData.data.id,
       name: formData.name,
@@ -146,11 +173,13 @@ export class ProductComponent implements OnInit {
       .stringify(data));
 
     this.productService.update(form_Data).subscribe((response: any) => {
+      this.ngxService.stop();
       this.dialogRef.close();
       this.onEditProduct.emit();
-      this.snackbarService.openSnackBar("Successfully Update Product", "success");
+      this.snackbarService.openSnackBar("Update Product Successfully", "success");
     }, (error) => {
-      this.dialogRef.close({ event: this.action, data: this.data });
+      // this.dialogRef.close({ event: this.action, data: this.data });
+      this.ngxService.stop();
       console.error(error);
       if (error.error?.message) {
         this.responseMessage = error.error?.message;

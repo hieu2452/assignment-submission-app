@@ -2,11 +2,11 @@
     <div class="product-list">
         <div class="product-card" (click)="addToCart(product)" *ngFor="let product of products">
             <mat-card>
-                <img mat-card-image src={{product.imageUrl}} alt="Photo of a Shiba Inu">
+                <img mat-card-image src={{product.imageUrl}} alt={{product.name}}>
                 <mat-card-content>
                     <strong>{{product.name}}</strong>
                     <hr>
-                    <strong>{{product.price}} vnd</strong>
+                    <strong>{{product.price | number}} VNĐ</strong>
                 </mat-card-content>
             </mat-card>
         </div>
@@ -28,6 +28,28 @@
                 <mat-label>Filter</mat-label>
                 <input matInput (keyup)="applyFilter($event)" #input>
             </mat-form-field>
+            <form [formGroup]="productQueryParam">
+                <mat-form-field appearance="standard" fxFlex>
+                    <mat-label>Sort</mat-label>
+                    <mat-select formControlName="price">
+                        <mat-option [value]="''">All</mat-option>
+                        <mat-option [value]="'cheapest'">Price ( Low - High )</mat-option>
+                        <mat-option [value]="'expensive'">Price ( High - Low )</mat-option>
+
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="standard" fxFlex>
+                    <mat-label>Category</mat-label>
+                    <mat-select formControlName="category">
+                        <mat-option [value]="''">All</mat-option>
+                        <mat-option *ngFor="let category of categorys" [value]="category.name">{{category.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button class="btn-apply" mat-flat-button color="primary" class="float-right" (click)="applyProductFilter()">
+                    Apply Filter
+                </button>
+            </form>
+
         </mat-card>
         <hr>
         <mat-card>
@@ -50,26 +72,13 @@
 
                         <mat-form-field apperence="standard" fxFlex>
                             <mat-label>Email</mat-label>
-                            <input matInput formControlName="email" required>
-                            <mat-error
-                                *ngIf="manageOrderForm.controls.email.touched && manageOrderForm.controls.email.invalid">
-                                <span *ngIf="manageOrderForm.controls.email.errors.required">This field is
-                                    mandatory.</span>
-                                <span *ngIf="manageOrderForm.controls.email.errors.pattern">This field is
-                                    invalid.</span>
-                            </mat-error>
+                            <input matInput formControlName="email">
                         </mat-form-field>
 
                         <mat-form-field apperence="standard" fxFlex>
                             <mat-label>Contact Number</mat-label>
-                            <input matInput formControlName="contactNumber" required>
-                            <mat-error
-                                *ngIf="manageOrderForm.controls.contactNumber.touched && manageOrderForm.controls.contactNumber.invalid">
-                                <span *ngIf="manageOrderForm.controls.contactNumber.errors.required">This field is
-                                    mandatory.</span>
-                                <span *ngIf="manageOrderForm.controls.contactNumber.errors.pattern">This field is
-                                    invalid.</span>
-                            </mat-error>
+                            <input matInput formControlName="contactNumber">
+
                         </mat-form-field>
 
 
@@ -97,7 +106,7 @@
         <mat-card>
             <b><span>Total Amount: </span></b>
 
-            <strong>{{totalAmount}} VND</strong>
+            <strong>{{totalAmount | number}} VNĐ</strong>
         </mat-card>
         <hr>
         <div class="responsive_table">

@@ -1,10 +1,14 @@
 package com.example.spring.CafeManagerApplication.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -46,5 +50,8 @@ public class Product {
     @Column(name = "imageUrl")
     private String imageUrl;
 
+    @JsonIgnore
+    @OneToMany(mappedBy="product", cascade= CascadeType.ALL, orphanRemoval=true)
+    List<BillDetail> billDetails = new ArrayList<>();
 
 }

@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { CategoryService } from 'src/app/services/category.service';
 import { SnackbarService } from 'src/app/services/snackbar.service';
 import { GlobalConstants } from 'src/app/shared/global-constants';
@@ -27,7 +28,8 @@ export class CategoryComponent implements OnInit {
     public dialogRef: MatDialogRef<CategoryComponent>,
     private snackbarService: SnackbarService,
     @Inject(MAT_DIALOG_DATA) public dialogData: any,
-    private router: Router
+    private router: Router,
+    private ngxSrevice: NgxUiLoaderService
   ) { }
 
   ngOnInit(): void {
@@ -49,18 +51,19 @@ export class CategoryComponent implements OnInit {
     }
   }
   add() {
+    this.ngxSrevice.start();
     var formData = this.categoryForm.value;
     var data = {
       name: formData.name
     }
     this.categoryService.add(data).subscribe((response: any) => {
+      this.ngxSrevice.stop();
       this.dialogRef.close();
       this.onAddCategory.emit();
       this.responseMessage = response.message;
-      this.snackbarService.openSnackBar(this.responseMessage, "success");
+      this.snackbarService.openSnackBar("Add new category successfully", "success");
     }, (error) => {
       this.dialogRef.close();
-      console.error(error);
       if (error.error?.message) {
         this.responseMessage = error.error?.message;
       } else {
@@ -71,20 +74,22 @@ export class CategoryComponent implements OnInit {
     });
   }
   edit() {
+    this.ngxSrevice.start();
     var formData = this.categoryForm.value;
     var data = {
       id: this.dialogData.data.id,
       name: formData.name
     }
     this.categoryService.update(data).subscribe((response: any) => {
+      this.ngxSrevice.stop();
       this.dialogRef.close();
       this.onEditCategory.emit();
       this.responseMessage = response.message;
-      alert("Successfully Update Category");
+      alert("Update Category Successfully");
       this.snackbarService.openSnackBar(this.responseMessage, "success");
     }, (error) => {
+      this.ngxSrevice.stop();
       this.dialogRef.close();
-      console.error(error);
       if (error.error?.message) {
         this.responseMessage = error.error?.message;
       } else {

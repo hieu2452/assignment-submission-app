@@ -42,7 +42,7 @@ public class Bill {
     private LocalDateTime createdDate = LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"));
 
     @JsonIgnore
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "bill")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "bill",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BillDetail> billDetails = new ArrayList<>();
 
 //    @JsonIgnore

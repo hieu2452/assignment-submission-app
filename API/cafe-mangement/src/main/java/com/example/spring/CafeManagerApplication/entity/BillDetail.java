@@ -27,7 +27,7 @@ public class BillDetail {
         this.quantity = quantity;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade=CascadeType.ALL)
     @MapsId("billId")
     @JoinColumn(name = "bill_id")
     private Bill bill;
@@ -40,6 +40,5 @@ public class BillDetail {
 
     @Column(name = "quantity")
     private Integer quantity;
-
 
 }

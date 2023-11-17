@@ -9,4 +9,6 @@ public interface BillService {
     ResponseEntity<?> getAllBill();
 
     ResponseEntity<?> getBillById(Integer id);
+
+    ResponseEntity<?> deleteBill(Integer id);
 }
