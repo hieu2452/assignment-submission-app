@@ -2,6 +2,7 @@ package com.example.spring.CafeManagerApplication.service.ServiceImpl;
 
 import com.example.spring.CafeManagerApplication.Utils.ProductFilters;
 import com.example.spring.CafeManagerApplication.Utils.ProductSpec;
+import com.example.spring.CafeManagerApplication.dto.MessageResponse;
 import com.example.spring.CafeManagerApplication.dto.ProductDto;
 import com.example.spring.CafeManagerApplication.entity.Category;
 import com.example.spring.CafeManagerApplication.entity.Product;
@@ -160,7 +161,7 @@ public class ProductServiceImpl implements ProductService {
 
         productRepository.delete(optional.get());
 
-        return new ResponseEntity<>("Delete product successfully", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(new MessageResponse("Delete product successfully"), HttpStatus.OK);
     }
 
 

@@ -45,12 +45,13 @@ export class LoginComponent implements OnInit {
 
     this.userService.login(data).subscribe((response: any) => {
       this.ngxService.stop();
-      this.dialogRef.close();  
+      this.dialogRef.close();
       this.tokenStorage.saveToken(response.accessToken)
       this.tokenStorage.saveRefreshToken(response.refreshToken);
       this.tokenStorage.saveUser(response);
       this.router.navigate(['/cafe/dashboard']);
     }, (error) => {
+      this.ngxService.stop();
       if (error.error?.message) {
         this.responseMessage = error.error?.message;
       } else {

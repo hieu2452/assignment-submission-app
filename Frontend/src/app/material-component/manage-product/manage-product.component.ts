@@ -36,11 +36,13 @@ export class ManageProductComponent implements OnInit {
     this.productService.getProductsForAdmin().subscribe((response: any) => {
       this.dataSource = new MatTableDataSource(response);
     }, (error: any) => {
-      console.log(error.error?.message);
-      if (error.error?.message) {
-        this.responseMessage = error.error?.message;
-      } else {
-        this.responseMessage = GlobalConstants.genericError;
+      if (error.status === 404) {
+        this.dataSource = new MatTableDataSource([]);
+        if (error.error?.message) {
+          this.responseMessage = error.error?.message;
+        } else {
+          this.responseMessage = GlobalConstants.genericError;
+        }
       }
       this.SnackbarService.openSnackBar(this.responseMessage, GlobalConstants.error);
     })

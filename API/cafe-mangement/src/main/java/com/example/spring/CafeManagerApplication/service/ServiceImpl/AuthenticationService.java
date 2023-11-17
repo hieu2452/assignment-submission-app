@@ -10,6 +10,7 @@ import com.example.spring.CafeManagerApplication.exception.UserNotFound;
 import com.example.spring.CafeManagerApplication.repository.RoleRepository;
 import com.example.spring.CafeManagerApplication.repository.UserRepository;
 import com.example.spring.CafeManagerApplication.security.JwtGenerator;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 
@@ -43,22 +45,30 @@ public class  AuthenticationService implements com.example.spring.CafeManagerApp
     }
 
     @Transactional
-    public ResponseEntity<?> register(RegisterDto registerDto) {
+    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+
+        if(registerDto.getUsername().isEmpty() || registerDto.getPassword().isEmpty()
+            || registerDto.getEmail().isEmpty() ||registerDto.getContactNumber().isEmpty()) {
+            return new ResponseEntity<>(new MessageResponse("Something wrong"),HttpStatus.BAD_REQUEST);
+        }
 
         if (userRepository.existsByUsername(registerDto.getUsername())){
-            return new ResponseEntity<>("username already exist", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>( new MessageResponse("username already exist"), HttpStatus.BAD_REQUEST);
         }
 
         UserEntity user = new UserEntity();
 
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
+        user.setEmail(registerDto.getEmail());
+        user.setContactNumber(registerDto.getContactNumber());
+
         Role role = roleRepository.findByName("employee").orElseThrow();
         user.setRoles(Collections.singletonList(role));
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("");
+        return new ResponseEntity<>(new MessageResponse("Sign up successfully"), HttpStatus.OK);
     }
 
     @Transactional

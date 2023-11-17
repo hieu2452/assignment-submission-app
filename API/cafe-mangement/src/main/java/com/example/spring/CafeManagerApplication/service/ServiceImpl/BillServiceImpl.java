@@ -77,7 +77,7 @@ public class BillServiceImpl implements BillService {
 
         List<BillDetailDto> detailDos = bills.stream().map(this::mapBillDetailDto).toList();
 
-        if(detailDos.isEmpty()) return new ResponseEntity<>(new MessageResponse("No data"), HttpStatus.NOT_FOUND);
+        if(detailDos.isEmpty()) return new ResponseEntity<>(new MessageResponse("No bills"), HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<>(detailDos,HttpStatus.OK);
     }

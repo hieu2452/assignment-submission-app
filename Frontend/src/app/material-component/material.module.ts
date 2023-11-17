@@ -16,7 +16,6 @@ import { ProductComponent } from './dialog/product/product.component';
 import { ConfirmationComponent } from './dialog/confirmation/confirmation.component';
 import { CategoryComponent } from './dialog/category/category.component';
 import { ViewBillComponent } from './view-bill/view-bill.component';
-import { ChangePasswordComponent } from './dialog/change-password/change-password.component';
 import { ManageUserComponent } from './manage-user/manage-user.component';
 import { ManageOrderComponent } from './manage-order/manage-order.component';
 
@@ -41,7 +40,6 @@ import { ManageOrderComponent } from './manage-order/manage-order.component';
     ConfirmationComponent,
     CategoryComponent,
     ViewBillComponent,
-    ChangePasswordComponent,
     ManageUserComponent,
     ManageOrderComponent,
   ]

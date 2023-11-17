@@ -22,9 +22,27 @@ public class UserEntity implements UserDetails {
 
     private String username;
     private String password;
+    private String email;
+    private String contactNumber;
 
     public Boolean getActive() {
         return active;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     public void setActive(Boolean active) {

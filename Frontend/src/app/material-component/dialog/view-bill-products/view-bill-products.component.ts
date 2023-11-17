@@ -28,7 +28,7 @@ export class ViewBillProductsComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.dialogData.data.products);
     console.log(this.data);
     let total_amount = 0;
-    for(let product of this.data.products) {
+    for (let product of this.data.products) {
       total_amount += product.quantity * product.price;
     }
     this.totalAmount = total_amount;
